@@ -1,0 +1,28 @@
+1. Crear base de datos local MONGODB
+	Instalar MongoDB Community Server
+	Descargar y pegar Mongos.exe (shell) en bin
+	Crear carpeta c:data
+		c:data\db
+
+	Variables de entorno
+		configuracion avanzada >> sistema >> copiamos ruta de mongo
+		C:\Program Files\MongoDB\Server\6.0\bin
+		editar Path >> Nuevo >> pegamos path 
+
+	Pruebas desde Shell
+		iniciamos 'mongosh'
+		introducimos  'MongoDB connection string (default: mongodb://localhost/)'
+
+	Pruebas desde Mongo Compass
+		Nueva base de datos (Picoteo_test)
+			coleccion (Inventario_test)
+			insertqamos documento
+			
+
+2. Unir colecciones 
+3. Servidor simple Node.js
+4. Conectar con base de datos principal
+5. Definir esquema de rutas
+6. Definir middlewares
+7. Aplicar validaciones
+8. 
