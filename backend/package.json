@@ -1,0 +1,39 @@
+{
+  "name": "tfg_el_picoteo_backend",
+  "version": "1.0.0",
+  "description": "Final University Project as web backend built with Node.js, MySQL, Express.js and another dependencies to manage a local hotelier.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexGA93/TFG_El_Picoteo_MERN.git"
+  },
+  "keywords": [
+    "Node",
+    "node.js",
+    "mysql",
+    "express",
+    "bar",
+    "cafe"
+  ],
+  "author": "Alejandro Gimeno Ataz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexGA93/TFG_El_Picoteo_MERN/issues"
+  },
+  "homepage": "https://github.com/AlexGA93/TFG_El_Picoteo_MERN#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1",
+    "nodemon": "^2.0.22"
+  }
+}
