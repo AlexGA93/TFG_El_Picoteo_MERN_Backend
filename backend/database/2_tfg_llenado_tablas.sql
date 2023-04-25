@@ -1,64 +1,3 @@
-/* Creacion DDBB */
--- mostrar bases de datos
-SHOW DATABASES;
--- creacion base de datos 
-CREATE DATABASE El_Picoteo;
--- seleccionamos la ddbb deseada
-USE El_Picoteo;
--- mostrar tabla de ddbb
-SHOW TABLES;
-
-/* Creacion Tablas: Registro de Productos */
-
-CREATE TABLE Almacen(
-    id INT AUTO_INCREMENT,
-    nombre VARCHAR(100),
-    precio_unidad FLOAT,
-
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE Inventario(
-    id INT AUTO_INCREMENT,
-    id_almacen INT,
-    unidades INT,
-    fecha DATETIME,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (id_almacen) REFERENCES Almacen(id)
-);
-
-
-/* Creacion de Tablas: Inversion productos a stock */
-CREATE TABLE Productos(
-    id INT AUTO_INCREMENT,
-    nombre VARCHAR(100),
-    precio_producto FLOAT,
-
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE Recetas(
-    id INT AUTO_INCREMENT,
-    id_producto INT,
-    id_almacen INT,
-    cantidad INT,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (id_producto) REFERENCES Productos(id),
-    FOREIGN KEY (id_almacen) REFERENCES Almacen(id)
-);
-
-CREATE TABLE Stock(
-    id INT AUTO_INCREMENT,
-    id_receta INT,
-    unidades INT,
-    fecha DATETIME,
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (id_receta) REFERENCES Productos(id)
-);
-
 /* ****************************** EJEMPLO ****************************** */
 
 /*
@@ -76,9 +15,9 @@ podra accerder a los ingredientes:
 En stock figurara una cantidad total de 10 unidades de cada uno de los productos anteriores, de los cuales se 
 simulara la compra de 3,2 y 5 unidades de cada uno respectivamente.
 */
-insert into Almacen
+INSERT INTO el_picoteo.almacen
 (nombre, precio_unidad)
-values
+VALUES
 -- panes
 ("Pan de Molde", CAST(ROUND((RAND()*(10.00-1.00)+1.00), 2)as decimal(18,2))),
 ("Pan de Barra", CAST(ROUND((RAND()*(10.00-1.00)+1.00), 2)as decimal(18,2))),
@@ -156,10 +95,10 @@ values
 ("Fritos", CAST(ROUND((RAND()*(10.00-1.00)+1.00), 2)as decimal(18,2))),
 ("Doritos", CAST(ROUND((RAND()*(10.00-1.00)+1.00), 2)as decimal(18,2)))
 ;
---TODO: AUTOMATIZAR CAPTACION DE IDS DE ALMACEN PARA INVENTARIO
-insert into Inventario
+
+INSERT INTO el_picoteo.inventario
 (id_almacen, unidades, fecha)
-values
+VALUES
 (1, round(1+(rand()*(50-1))), now()),
 (2, round(1+(rand()*(50-1))), now()),
 (3, round(1+(rand()*(50-1))), now()),
@@ -225,9 +164,9 @@ values
 (64, round(1+(rand()*(50-1))), now())
 ;
 
-insert into Productos
+INSERT INTO el_picoteo.productos
 (nombre, precio_producto)
-values
+VALUES
 ("Sadwitch mixto", CAST(ROUND((RAND()*(3.00-1.00)+1.00), 2)as decimal(18,2))),
 ("Sadwitch vegano", CAST(ROUND((RAND()*(3.00-1.00)+1.00), 2)as decimal(18,2))),
 ("Sadwitch vegetal", CAST(ROUND((RAND()*(3.00-1.00)+1.00), 2)as decimal(18,2))),
@@ -241,11 +180,9 @@ values
 
 -- Tantos como elementos ponga el local a disposicion del cliente
 ;
---TODO: AUTOMATIZAR CAPTACION DE IDS DE PRODUCTOS PARA RECETAS
-insert into Recetas
+INSERT INTO el_picoteo.recetas
 (id_producto, id_almacen, cantidad)
-values
---mixto = pan de molde, jamon, queso
+VALUES
 (1,1,2),(1,5,1),(1,34,1),
 -- vegano = pan de molde, lechuga, tomate, soja, aceite de oliva
 (2,1,2),(2,17,1),(2,18,2),(2,23,1),(2,55,1),
@@ -267,22 +204,13 @@ values
 (10,6,2),(10,10,1),(10,24,10),(10,17,1),(10,18,1)
 
 -- Tantos como elementos ponga el local a disposicion del cliente
-
 ;
 
-
--- actualizacion de nuevos registros en inventario
-/*
-- 1.acceder a cada elemento de receta
-- 2.ingresar en stock
-- 3.acceder a cada uno de los elementos de stock con sus ingredientes
-- 4.ingresar nuevo registro
-*/
-
--- 1
 SELECT * FROM el_picoteo.recetas;
+
+
 -- 2.extraemos sus ids y los usamos en la tabla stock
-INSERT INTO Stock
+INSERT INTO el_picoteo.stock
 (id_receta, unidades, fecha)
 VALUES
 -- mixto [id_receta: 1, unidades: 3]
@@ -292,19 +220,20 @@ VALUES
 -- chivito [id_receta: 4, unidades: 5]
 (4,5,now())
 ;
+
+SELECT * from el_picoteo.stock;
 -- 3
 -- mostrar agrupacionde los nombres y precios de Productos junto con los ingredientes(id_almacen) y cantidad de Recetas
 /* SELECT p.nombre, p.precio_producto, r.id_almacen, r.cantidad
 FROM Productos p JOIN Recetas r on p.id = r.id_producto
 ORDER BY p.id; */
-
+/* 
 SELECT p.nombre, p.precio_producto, a.nombre, r.cantidad
 FROM Productos p
 INNER JOIN Recetas r ON p.id=r.id_producto
 INNER JOIN Almacen a ON r.id_almacen=a.id
-;
+; */
 
---4
 insert into Inventario
 (id_almacen, unidades, fecha)
 values
@@ -312,53 +241,33 @@ values
 Multiplicamos por (-2) ya que necesitamos que el registro sea negativo(por sustraccion) y tanto como elementos finales
 ponemos en stoock. En este caso cada ingrediente tendra su (-)(numero de ingredientes * numero_elementos finales)
 */
---mixto
-(1, 2*(-3), now()), --pan de molde
-(5, 1*(-3), now()), --jamon
-(34, 1*(-3), now()), --queso
+(1, 2*(-3), now()),
+(5, 1*(-3), now()), 
+(34, 1*(-3), now()), 
 
 -- vegetal
-(1, 2*(-2), now()), --pan de molde
-(17, 1*(-2), now()), --lechuga
-(18, 2*(-2), now()), --tomate
-(16, 1*(-2), now()), --atun
-(10, 1*(-2), now()), --huevo
+(1, 2*(-2), now()),
+(17, 1*(-2), now()), 
+(18, 2*(-2), now()), 
+(16, 1*(-2), now()), 
+(10, 1*(-2), now()), 
 -- Chivito
-(2, 2*(-5), now()), --pen de barra
-(17, 1*(-5), now()), --lechuga
-(18, 2*(-5), now()), --tomate
-(7, 1*(-5), now()), --pechuga de pavo
-(10, 1*(-5), now()), --huevo
-(57, 1*(-5), now()) --mayonesa
+(2, 2*(-5), now()), 
+(17, 1*(-5), now()), 
+(18, 2*(-5), now()), 
+(7, 1*(-5), now()), 
+(10, 1*(-5), now()),
+(57, 1*(-5), now()) 
 ;
 
--- Cuando se hace una compra debemos registrar en stock la cuenta negativa.
--- EN ESTE CASO HEMOS VENDIDO 1 MIXTO, 2 VEGETALES, 2 CHIVITOS
 
-INSERT INTO Stock
-(id_receta, unidades, fecha)
-VALUES
--- mixto [id_receta: 1, unidades: 3]
-(1,3-1,now()),
--- vegetal [id_receta: 3, unidades: 2]
-(3,2-2,now()),
--- chivito [id_receta: 4, unidades: 5]
-(4,5-2,now())
-;
 
-/* ****************************** VISIOANDO DE TABLAS DE BASE DE DATOS ****************************** */
+
 
 SELECT * FROM el_picoteo.almacen;
-SELECT * FROM el_picoteo.inventario WHERE fecha BETWEEN '2023-04-18 10:29:39' and now();
+SELECT * FROM el_picoteo.inventario;
 SELECT * FROM el_picoteo.productos;
 SELECT * FROM el_picoteo.recetas;
 SELECT * FROM el_picoteo.stock;
 
-/* ****************************** BORRADO DE TABLAS DE BASE DE DATOS ****************************** */
 
-drop table Recetas;
-drop table Inventario;
-drop table Almacen;
-
-
-DROP DATABASE El_Picoteo;
