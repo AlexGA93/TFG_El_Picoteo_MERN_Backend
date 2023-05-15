@@ -1,9 +1,9 @@
-const express = require('express');
+import express, { json, urlencoded } from 'express';
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(json());
+app.use(urlencoded({extended: true}));
 
 // rutas
 
@@ -13,4 +13,4 @@ app.listen(PORT,() => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
-module.exports = app;
+export default app;
