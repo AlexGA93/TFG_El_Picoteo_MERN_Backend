@@ -1,0 +1,31 @@
+# latest compose version
+version: '3.8'
+
+# services (containers)
+services:
+  # MySQL container named as 'mysqldb'
+  mysqldb:
+    # MySQL image
+    image: mysql
+    # environment variables from .env file
+    env_file:
+      - ./.env
+    restart: always
+    # MySQL configuration
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+    # ports - pc_port:internal_docker_port
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    volumes:
+      - .:/elpicoteo
+
+  app:
+    build: .
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
