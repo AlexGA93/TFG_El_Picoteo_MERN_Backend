@@ -9,6 +9,7 @@ const app: Express = express();
 
 app.use(express.json());
 // Routes
+app.get("/", (req: Request, res: Response) => res.status(200).send("Hola Servidor!"))
 app.use("/api/ddbb", database);
 
 const PORT: string = process.env.NODE_DOCKER_PORT!;

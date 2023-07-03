@@ -3,6 +3,21 @@ version: '3.8'
 
 # services (containers)
 services:
+  server:
+  # where is the app (context) to work with
+    build:
+      context: .
+      # use dockerfile for development 
+      dockerfile: Dockerfile.dev
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    links:
+      - mysqldb
+    depends_on:
+      - mysqldb
+    # volumes:
+    #   - .:/home/app
+
   # MySQL container named as 'mysqldb'
   mysqldb:
     # MySQL image
@@ -20,15 +35,10 @@ services:
       - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
     volumes:
       - mysql-data:/var/lib/mysql
-
-  app:
-    build: .
-    depends_on:
-      - mysqldb
-    links:
-      - mysqldb
-    ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-
 volumes:
-  mysql-data:
+  mysql-data: 
+
+
+
+
+# docker-compose -f docker-compose-dev.yml up
