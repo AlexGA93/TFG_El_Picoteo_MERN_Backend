@@ -15,8 +15,8 @@ services:
       - mysqldb
     depends_on:
       - mysqldb
-    # volumes:
-    #   - .:/home/app
+    volumes:
+      - .:/home/app
 
   # MySQL container named as 'mysqldb'
   mysqldb:
@@ -37,8 +37,5 @@ services:
       - mysql-data:/var/lib/mysql
 volumes:
   mysql-data: 
-
-
-
 
 # docker-compose -f docker-compose-dev.yml up
