@@ -5,7 +5,10 @@ version: '3.8'
 services:
   server:
   # where is the app (context) to work with
-    build: .
+    build:
+      context: .
+      # use dockerfile for development 
+      dockerfile: Dockerfile.dev
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     links:
@@ -35,4 +38,4 @@ services:
 volumes:
   mysql-data: 
 
-# docker-compose up
+# docker-compose -f docker-compose-dev.yml up

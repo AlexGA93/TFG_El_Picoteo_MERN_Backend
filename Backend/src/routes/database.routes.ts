@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { checkDatabase } from "../controllers/database.controller";
+import { checkDDBB, getDatabaseTables, createTable } from "../controllers/database.controller";
 const router: Router = Router();
 
-router.get("/comprobar", checkDatabase);
-router.get("/crear-tablas");
+router.get("/", checkDDBB);
+router.get("/:database_name/tables", getDatabaseTables);
+router.post("/:database_name/tables", createTable);
 
 
 export default router;

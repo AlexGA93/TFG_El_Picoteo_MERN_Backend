@@ -1,6 +1,7 @@
 # Define image and version
 FROM node:18
-
+ 
+RUN npm i -g nodemon 
 RUN mkdir -p /home/app
 
 # We're going to define our code inside a folder inside the docker container
@@ -14,4 +15,4 @@ COPY . .
 # PORT
 EXPOSE 5000
 # Initiate with the package.json command to run the server
-CMD [ "node", "/home/app/index.js" ]
+CMD [ "npm", "run", "dev" ]
