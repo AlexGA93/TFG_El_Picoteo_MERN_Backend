@@ -17,6 +17,10 @@
 - Delete Docker Image
     ```
     docker image rm image_name
+
+    or
+
+    docker rmi $(docker images -q)
     ```
 
 ## 2. Docker Image's Containers
@@ -60,6 +64,10 @@
     or
 
     docker rm container_ID
+
+    or 
+
+    docker rm $(docker ps -aq) -f 
     ```
 - Logs
     ```
@@ -150,3 +158,38 @@ docker compose down
 ```
 docker compose -f docker-compose-dev.yml up
 ```
+
+### ENDPOINTS
+```
+
+Endpoints
+========
+
+/api/databases
+- /                                                                                            - get all databases
+- /:database_name/tables/                                                                      - get all database tables
+- /:database_name/tables/:table_name                                                           - get table content
+
+Endpoints for admin's use
+--------------------------------------------------------------------------------------------------------------------------------------
+- /:database_name/tables/                                                                      - post database new element(s) IF NOT EXISTS
+- /:database_name/tables/:table_name                                                           - put /patch database element(s) IF EXISTS
+- /:database_name/tables/:table_name                                                           - delete  database new element(s) IF EXISTS
+--------------------------------------------------------------------------------------------------------------------------------------
+
+FILTER DATABASE TABLES CONTENT
+- /:database_name/tables/:table_name/filter
+
+
+
+
+```
+
+//TODO: HACER COMPROBACION DE CREACION DE BASE DE DATOS
+/*
+aL INICIAR COMPROBARA SI EXISTE LA BASE DE DATOS
+aL MOMENTO DE CREAR LA BASE DE DATOS CREARA LA ESTRUCTURA DE TABLAS INTERNA
+mirar como
+https://github.com/UskoKruM/restapi-nodejs-express-mysql/blob/master/src/controllers/language.controller.js
+Segun pone en este proyecto, no parece que sea necesario el estar referenciando el acceso continuo a la base de datos.. .se nombra y ya
+*/

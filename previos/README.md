@@ -125,4 +125,28 @@ Haciendo referencia a la estructura de nuestra base de datos se ha ideado un sis
             FOREIGN KEY (id_receta) REFERENCES Productos(id)
         );
         ```
-### Operaciones de Control
+### ENDPOINTS
+```
+
+Endpoints
+========
+
+/api/databases
+- /                                                                                            - get all databases
+- /:database_name/tables/                                                                      - get all database tables
+- /:database_name/tables/:table_name                                                           - get table content
+
+Endpoints for admin's use
+--------------------------------------------------------------------------------------------------------------------------------------
+- /:database_name/tables/:table_name                                                           - post database new element(s) IF NOT EXISTS
+- /:database_name/tables/:table_name                                                           - put /patch database element(s) IF EXISTS
+- /:database_name/tables/:table_name                                                           - delete  database new element(s) IF EXISTS
+--------------------------------------------------------------------------------------------------------------------------------------
+
+FILTER DATABASE TABLES CONTENT
+- /:database_name/tables/:table_name/filter
+
+
+
+
+```
