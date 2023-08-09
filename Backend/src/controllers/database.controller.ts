@@ -5,7 +5,7 @@ import mysqlPool from "../db/db";
 
 config();
 
-export const checkDDBB = (req: Request, res: Response) => {
+export const checkDDBB = (req: Request, res: Response): void=> {
     try {
         const checkDDBBQuery: string = 'SHOW DATABASES';
         mysqlPool.query(checkDDBBQuery, (err, result, fields) => {
@@ -26,7 +26,7 @@ export const checkDDBB = (req: Request, res: Response) => {
     }
 }
 
-export const getDatabaseTables = (req: Request, res: Response) => {
+export const getDatabaseTables = (req: Request, res: Response): void => {
     try {
         const showTablesQuery: string = 'SHOW TABLES;';
         mysqlPool.query(showTablesQuery, (err, result, fields) => {
@@ -48,7 +48,7 @@ export const getDatabaseTables = (req: Request, res: Response) => {
     }
 }
 
-export const createTable = (req: Request, res: Response) => {
+export const createTable = (req: Request, res: Response): void => {
     try {
         
         // const tableCreationQuery: string = `CREATE TABLE IF NOT EXISTS ${req.body.tableName} ( id INT auto_increment, nombre VARCHAR(100),  precio_unidad FLOAT, primary key (id))`;
