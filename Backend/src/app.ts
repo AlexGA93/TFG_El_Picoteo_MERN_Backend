@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import { database, users } from "./routes";
+import { database, users, auth } from "./routes";
 require("dotenv").config();
 
 const app: Express = express();
@@ -11,5 +11,6 @@ app.get("/", (req: Request, res: Response) =>
 );
 app.use("/api/databases", database);
 app.use("/api/users/", users);
+app.use("/api/auth/",auth);
 
 export default app;
