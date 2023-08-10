@@ -95,6 +95,11 @@ It will make three steps:
 
     docker run -pmachine_port:container_port --name container_name -d image_name
     ```
+### 3.1 Access to the docker container
+```
+docker exec -it docker_container_name bash -l
+```
+
 ## 4. Network
 
 - List networks
