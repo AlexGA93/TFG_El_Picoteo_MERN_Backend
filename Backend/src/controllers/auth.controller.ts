@@ -48,7 +48,7 @@ export const registerUser = (req: Request, res: Response) => {
             });
             throw err;
           }
-          const token = generateAuthToken(email);
+          const token = generateAuthToken(email, role);
 
           res.status(200).json({ token });
           console.log("Ingreso de usuario finalizo satisfactoriamente.");
