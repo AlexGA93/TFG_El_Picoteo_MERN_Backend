@@ -8,7 +8,7 @@ describe("GET /api/databases", ()=>{
     // test to show databases
     test("It should return 200 code and databases", async ()=>{
         const response = await request(requestApp).get("/api/databases/");
-        console.log(response.body);
+        // console.log(response.body);
         expect(response.status).toBe(200);
 
     }, globalTimeOut);
