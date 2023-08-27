@@ -38,4 +38,5 @@ services:
 volumes:
   mysql-data: 
 
+# sudo systemctl start docker
 # docker-compose -f docker-compose-dev.yml up
