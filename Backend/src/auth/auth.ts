@@ -3,9 +3,19 @@ import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 
 const jwtKey: string = "ElPicoteoTFG";
 const emailRegex: RegExp = /^[A-Za-z0-9._%+-]+@elpicoteo\.com$/;
+
+
 export const generateAuthToken = (email: string, role?: string): string =>
   jwt.sign({ email, role }, jwtKey, { expiresIn: "2h" });
 
+
+/**
+ * * We provide a authentication token to extract the user's essential information and check if 
+ * * He/She can authenticate into the application.
+ * 
+ * @param token Token provided to be verified
+ * @returns verified token
+ */
 export const verifyToken = (token: string) => {
   try {
     return jwt.verify(token, jwtKey);
@@ -17,6 +27,18 @@ export const verifyToken = (token: string) => {
   }
 };
 
+/**
+ * * Middlewares to authenticate the user extracting the Json Web Token from the HTTP request
+ * * and verify the user credentials like email and role.
+ * 
+ * TODO: Check for use the method above 'verifyToken' instead of repeat the jwt verify each time.
+ * 
+ * ? Should refactor these methods to use a single one?
+ * 
+ * @param req HTTP express.js request
+ * @param res HTTP express.js response
+ * @param next Express.js NextFunction method to exit the middleware
+ */
 export const authenticationByAdmin = (
   req: Request,
   res: Response,
