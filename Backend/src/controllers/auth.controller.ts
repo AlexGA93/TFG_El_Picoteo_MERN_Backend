@@ -23,23 +23,25 @@ export const registerUser = (req: Request, res: Response) => {
   let { name, second_name, email, password, role }: UserBody = req.body;
 
   // check if there is email in users table
-  const checkEmailQuery: string = "SELECT * FROM Usuarios WHERE email NOT REGEXP '^[^@]+@[^@]+.[^@]{2,}$';";
-  
-  mysqlPool.query(checkEmailQuery, (err, result, fields) => {
+  const checkEmailQuery: string =
+    "SELECT * FROM Usuarios WHERE email NOT REGEXP '^[^@]+@[^@]+.[^@]{2,}$';";
 
+  mysqlPool.query(checkEmailQuery, (err, result, fields) => {
     if (err) {
       console.error(err?.message);
       throw err;
     }
 
     if ((result as RowDataPacket[]).length === 0) {
-      console.log("Usario no encontrado en la base de datos. Procediendo a su ingreso...");
+      console.log(
+        "Usario no encontrado en la base de datos. Procediendo a su ingreso..."
+      );
 
       // insert user into the table
       const registerUserQuery: string = `INSERT INTO Usuarios(name, second_name, email, password, role) values(? , ?, ?, ?, ?);`;
       mysqlPool.query(
         registerUserQuery,
-        [name, second_name, email, hashingPassword(password), role],
+        [name, second_name, email, hashingPassword(password!), role],
         (err, result, fields) => {
           if (err) {
             console.error(err?.message);
@@ -70,10 +72,10 @@ export const login = (req: Request, res: Response) => {
     });
   }
 
-  // extract user credentials
+  // extract user and password from body request
   let { email, password }: UserLogin = req.body;
-  // check if email exists in database
   const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ?`;
+  // check if there is a user registered with those credentials
   mysqlPool.query(loginQuery, [email], (err, result, fields) => {
     if (err) {
       console.error(err?.message);
@@ -81,18 +83,21 @@ export const login = (req: Request, res: Response) => {
         mssg: "Problema detectado a la hora de comprobar credenciales de usuario",
       });
       throw err;
-    }
-    // if exists hash password and compare it
-    bcrypt
+    }else{
+      // if user exists we need to hash the password and a role to generate a token
+      bcrypt
       .compare(password, (result as RowDataPacket[])[0].password)
       .then(() => {
-        const token = generateAuthToken(email);
+        const role = (result as RowDataPacket[])[0].role;
+        const token = generateAuthToken(email, role);
         res.status(200).json({ token });
         console.log("inicio de sesion se llevo a cabo satisfactoriamente.");
+        
       })
       .catch((err) => {
         console.error(err);
         if (err) throw err;
       });
+    };
   });
 };

@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { createTableUsers, login, registerUser } from "../controllers";
+import { createTableUsers, getUser, login, registerUser, updateUser } from "../controllers";
 import { body } from "express-validator";
+import { authenticationByAdmin, authenticationByBoth } from "../auth/auth";
 const router: Router = Router();
 
-router.get("/", createTableUsers);
+router.get("/", authenticationByAdmin, createTableUsers);
+router.get("/:id", authenticationByBoth, getUser);
+router.put("/:id", authenticationByAdmin, updateUser);
 
 
 
