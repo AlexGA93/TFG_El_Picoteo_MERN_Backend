@@ -5,7 +5,7 @@ const jwtKey: string = "ElPicoteoTFG";
 const emailRegex: RegExp = /^[A-Za-z0-9._%+-]+@elpicoteo\.com$/;
 
 
-export const generateAuthToken = (email: string, role?: string): string =>
+export const generateAuthToken = (email: string, role: string): string =>
   jwt.sign({ email, role }, jwtKey, { expiresIn: "2h" });
 
 
@@ -114,6 +114,8 @@ export const authenticationByEmployee = (
       }
   
       const decoded: string | JwtPayload = jwt.verify(token, jwtKey);
+      console.log(decoded);
+      
   
       if (
         ((decoded as JwtPayload).email as string).match(emailRegex) &&
