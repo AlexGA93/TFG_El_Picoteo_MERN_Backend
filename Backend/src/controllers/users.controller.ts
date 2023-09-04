@@ -1,11 +1,9 @@
 import { config } from "dotenv";
 import { Request, Response } from "express";
-import mysqlPool from "../db/db";
 import { RowDataPacket } from "mysql2";
+import mysqlPool from "../db/db";
 import { UserBody } from "../types/types";
-import { log } from "console";
 config();
-
 
 export const createTableUsers = (req: Request, res: Response): void => {
   const createUsersTableQuery: string =
@@ -28,7 +26,6 @@ export const createTableUsers = (req: Request, res: Response): void => {
   });
 };
 
-
 export const getUser = (req: Request, res: Response) => {
   // extract user from request
   const userId: string = req.params.id;
@@ -41,17 +38,22 @@ export const getUser = (req: Request, res: Response) => {
         mssg: "Problema detectado a la hora de comprobar presencia de usuario",
       });
       throw err;
-    }else{
-      const userData: UserBody = (({ name, second_name, email, role }) => ({ name, second_name, email, role }))((result as RowDataPacket[])[0]);
+    } else {
+      const userData: UserBody = (({ name, second_name, email, role }) => ({
+        name,
+        second_name,
+        email,
+        role,
+      }))((result as RowDataPacket[])[0]);
       res.status(200).json(userData);
     }
-  })
+  });
 };
 
 export const updateUser = (req: Request, res: Response) => {
   const userId: string = req.params.id;
   const newParameters = req.body;
-  
+
   const findUserQuery: string = `SELECT * FROM Usuarios WHERE id=?`;
   mysqlPool.query(findUserQuery, [userId], (err, result, fields) => {
     if (err) {
@@ -60,56 +62,67 @@ export const updateUser = (req: Request, res: Response) => {
         mssg: "Problema detectado a la hora de comprobar presencia de usuario",
       });
       throw err;
-    }else{
-
+    } else {
       const tableResponse = (result as RowDataPacket[])[0];
       const newPayload: any = {};
 
-      for(let key in tableResponse){
-        if(key in newParameters){
-          // console.log(tableResponse[key]+'===>'+newParameters[key]);
+      for (let key in tableResponse) {
+        if (key in newParameters) {
           newPayload[key] = newParameters[key];
-        }else{
-          // console.log(tableResponse[key]);
-          newPayload[key] = tableResponse[key]
+        } else {
+          newPayload[key] = tableResponse[key];
         }
-        
       }
 
       /* 
         TODO: correct type to  empty object 
         TODO: notify user that email, role and id cannot be updated
       */
-      // console.log(newPayload);
-      // `UPDATE Usuarios SET name=${newPayload.name}, second_name=${newPayload.second_name}, role=${newPayload.role} WHERE id=${newPayload.id}`
       const updateUserQuery: string = `UPDATE Usuarios SET name=?, second_name=? WHERE id=?`;
-      mysqlPool.query(updateUserQuery, [newPayload.name, newPayload.second_name, newPayload.id], (err, result, fields) => {
+      mysqlPool.query(
+        updateUserQuery,
+        [newPayload.name, newPayload.second_name, newPayload.id],
+        (err, result, fields) => {
+          if (err) {
+            console.error(err?.message);
+            res.status(404).json({
+              mssg: "Problema detectado a la hora de actualizar informacion de usuario",
+            });
+            throw err;
+          } else {
+            console.log(result);
+          }
+        }
+      );
+    }
+  });
+};
+
+export const deleteUser = (req: Request, res: Response) => {
+  const userId: string = req.params.id;
+  const findUserQuery: string = `SELECT * FROM Usuarios WHERE id=?`;
+  mysqlPool.query(findUserQuery, [userId], (err, result, fields) => {
+    if (err) {
+      console.error(err?.message);
+      res.status(404).json({
+        mssg: "Problema detectado a la hora de encontrar usuario",
+      });
+      throw err;
+    } else {
+      const deleteUserQuery: string = `DELETE FROM Usuarios WHERE id=?`;
+      mysqlPool.query(deleteUserQuery, [userId], (err, result, fields) => {
         if (err) {
           console.error(err?.message);
           res.status(404).json({
-            mssg: "Problema detectado a la hora de actualizar informacion de usuario",
+            mssg: "Problema detectado a la hora de eliminar usuario",
           });
           throw err;
-        }else{
-          console.log(result);
+        } else {
+          res.status(200).json({
+            mssg: "Usuario Eliminado correctamente",
+          });
         }
-      })
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-      const updateQuery: string = `UPDATE Usuarios SET ? WHERE email=?`;
+      });
     }
-  })
-
+  });
 };
