@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
       "dev": "nodemon -L src/index.ts",
-      "test": "set NODE_OPTIONS=--experimental-vm-modules && npx jest --detectOpenHandles"
+      "test": "set NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules && npx jest --runInBand  --detectOpenHandles"
     },
     "keywords": [],
     "author": "",

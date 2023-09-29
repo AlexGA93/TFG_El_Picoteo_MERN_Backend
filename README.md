@@ -100,6 +100,11 @@ It will make three steps:
 docker exec -it docker_container_name bash -l
 ```
 
+- Internal MySQL commands
+```
+mysql --user="root" --password="123456"
+```
+
 ## 4. Network
 
 - List networks
@@ -163,6 +168,158 @@ docker compose down
 ```
 docker compose -f docker-compose-dev.yml up
 ```
+
+## 8. Actions & Commands 
+
+### Preparing Environment
+First of all we must connect to our docker-build database using the steps written in the point [3 of this documentation](#31-access-to-the-docker-container). When we are able to connect to the MySQL environment we can insert any query we need.
+
+The first couple of commands that we'll need are:
+- Show all the databases
+    ```
+    SHOW DATABASES;
+    ```
+
+- Access to the correct database
+    ```
+    USE ElPicoteo;
+    ```
+
+- Show all the tables that our database contains
+    ```
+    SHOW TABLES;
+    ```
+
+**NOTICE:** If there is no tables inside, we need to create a users table to be able to register our employees and admins.
+
+- Create manually a table
+    ```
+    CREATE TABLE IF NOT EXISTS Usuarios 
+    (
+        id INT auto_increment, 
+        name VARCHAR(100), 
+        second_name varchar(100), 
+        email varchar(100), 
+        password varchar(255), 
+        role varchar(100),
+        primary key(id)
+    );
+    ```
+- Show a table's content
+    ```
+    Select * FROM usuarios;
+    ```
+
+### Backend Endpoints
+Once we have a proper built environment we must register a new user. In this case we're going to register two new users to test our endpoint:
+
+- Register endpoint (/api/auth/register)
+    - We'll ingress the folowing credentials:
+    John Doe:
+    ```
+    {
+        "name":"John",
+        "second_name": "Doe",
+        "email":"johnDoe@elpicoteo.com",
+        "password":"92johnDOE4ever",
+        "role":"admin"
+    }
+    ```
+    Jane Doe:
+    ```
+    {
+        "name":"Jane",
+        "second_name": "Doe",
+        "email":"janeDoe@elpicoteo.com",
+        "password":"92johnDOE4ever",
+        "role":"employee"
+    }
+    ```
+
+    Every registration process will generate a JWT ([JSON Web Token](https://jwt.io/)). This token will contain the user's information that developer thought they will be neccessaries to the app's correct functionallity.
+
+    In this case we'll take a generated JWT of the previous proccess to show how it works:
+
+    ```
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImphbmVEb2VAZWxwaWNvdGVvLmNvbSIsInJvbGUiOiJlbXBsb3llZSIsImlhdCI6MTY5NTg5MDE2MiwiZXhwIjoxNjk1ODk3MzYyfQ.QyBIQKzLuTajPUyMkFllKy0egaS9EGfh-TUh1JTUdW4
+    ``` 
+    We can see some information if we decode this token:
+
+    - Header (ALGORITHM & TOKEN TYPE) 
+    ```
+    {
+        "alg": "HS256",
+        "typ": "JWT"
+    }
+    ```
+    - PAYLOAD (DATA)
+    ```
+    {
+        "email": "janeDoe@elpicoteo.com",
+        "role": "employee",
+        "iat": 1695890162,
+        "exp": 1695897362
+    }
+    ```
+    - VERIFY SIGNATURE
+    ```
+    HMACSHA256(
+        base64UrlEncode(header) + "." +
+        base64UrlEncode(payload), 
+    )
+    ```
+    **NOTICE: ** All this information can be tested in the official site previously provided.
+
+- Login (/api/auth/login)
+    - We'll ingress the folowing credentials: Generating a new JWT.
+    ```
+    {
+        "email":"janeDoe@elpicoteo.com",
+        "password":"92johnDOE4ever"
+    }
+    ```
+    
+At this point we have a previously created table to store any user that our project needs and we've registered two users with different roles and we tested that we can login with their credentials. Next step is check if we can get their data or update them (We need to be cautelous with the user's role). 
+
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 
 ### ENDPOINTS
 ```
