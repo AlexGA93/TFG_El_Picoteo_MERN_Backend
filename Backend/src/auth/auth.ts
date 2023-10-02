@@ -114,7 +114,6 @@ export const authenticationByEmployee = (
       }
   
       const decoded: string | JwtPayload = jwt.verify(token, jwtKey);
-      console.log(decoded);
       
   
       if (
