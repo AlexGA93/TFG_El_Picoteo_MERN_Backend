@@ -7,7 +7,8 @@ const mysqlPool = createPool({
     user: 'root',
     password: process.env.MYSQL_ROOT_PASSWORD,
     port: Number(process.env.MYSQL_DOCKER_PORT),
-    database: process.env.MYSQL_DATABASE
+    database: process.env.MYSQL_DATABASE,
+    multipleStatements: true
 });
 
 export default mysqlPool;
