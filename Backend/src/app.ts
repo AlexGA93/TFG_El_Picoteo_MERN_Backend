@@ -9,7 +9,6 @@ app.use(express.json());
 app.get("/", (req: Request, res: Response) =>
   res.status(200).json({mssg:"Bienvenido a El Picoteo.sl"})
 );
-
 app.use("/api/auth/",auth);
 app.use("/api/users/", users);
 app.use("/api/databases", database);
