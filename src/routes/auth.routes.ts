@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { login, registerUser } from "../controllers";
+import { login, registerUser, regenerateToken, validateToken } from "../controllers";
 import { check } from "express-validator";
 import { authenticationByAdmin } from "../auth/auth";
+import { validateJWT } from "../middleware/validate-jwt.middleware";
 const router: Router = Router();
 
 const passRegex: RegExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
@@ -60,5 +61,14 @@ router.post(
     .withMessage("Please enter a valid password"),
   login
 );
+
+/**
+ * Regeneration token validation
+ * Must pass through a middleware where it'll check if user exists or not
+ * if it matches
+ */
+router.get("/renew", validateJWT, regenerateToken)
+
+router.get("/validate", validateJWT, validateToken);
 
 export default router;

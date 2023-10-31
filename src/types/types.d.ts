@@ -10,3 +10,10 @@ export interface UserLogin {
   email: string,
   password: string
 }
+
+export interface VerifiedTokenType {
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
