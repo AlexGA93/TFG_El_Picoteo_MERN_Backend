@@ -57,29 +57,12 @@ export const getDatabaseTables = (req: Request, res: Response): void => {
   }
 };
 
-// export const createTable = (req: Request, res: Response): void => {
-//   try {
-//     // const tableCreationQuery: string = `CREATE TABLE IF NOT EXISTS ${req.body.tableName} ( id INT auto_increment, nombre VARCHAR(100),  precio_unidad FLOAT, primary key (id))`;
-//     // const tableCreation = connection.query(tableCreationQuery);
-//     // console.log(tableCreation);
-//     // if(tableCreation){
-//     //     res.status(200).json({mssg:`Tabla ${req.body.tableName} creada correctamente!`});
-//     // }else{
-//     //     res.status(500).json({mssg: "Error durante la creacion de la tabla!"})
-//     // }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ error });
-//   }
-// };
-
 export const createTables = (req: Request, res: Response) => {
   try {
     const readedQueries = fs.readFileSync(
       path.join(__dirname, `../db/Tables.sql`),
       "utf-8"
     );
-    console.log(readedQueries.split("\n"));
 
     mysqlPool.query(readedQueries, (err, results) => {
       if (err) throw err;
