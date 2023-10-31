@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import { VerifiedTokenType } from "../types/types";
 
 const jwtKey: string = "ElPicoteoTFG";
 const emailRegex: RegExp = /^[A-Za-z0-9._%+-]+@elpicoteo\.com$/;
@@ -16,7 +17,7 @@ export const generateAuthToken = (email: string, role: string): string =>
  * @param token Token provided to be verified
  * @returns verified token
  */
-export const verifyToken = (token: string) => {
+export const verifyToken = (token: string): string | jwt.JwtPayload | VerifiedTokenType => {
   try {
     return jwt.verify(token, jwtKey);
   } catch (error) {

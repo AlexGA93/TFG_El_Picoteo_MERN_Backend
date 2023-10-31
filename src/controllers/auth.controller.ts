@@ -3,10 +3,10 @@ import { config } from "dotenv";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { RowDataPacket } from "mysql2";
-import { generateAuthToken } from "../auth/auth";
+import { generateAuthToken, verifyToken } from "../auth/auth";
 import mysqlPool from "../db/db";
 import { hashingPassword } from "../security/hashing";
-import { UserBody, UserLogin } from "../types/types";
+import { UserBody, UserLogin, VerifiedTokenType } from "../types/types";
 config();
 
 export const registerUser = (req: Request, res: Response) => {
@@ -62,7 +62,7 @@ export const registerUser = (req: Request, res: Response) => {
   });
 };
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -73,31 +73,84 @@ export const login = (req: Request, res: Response) => {
   }
 
   // extract user and password from body request
+
   let { email, password }: UserLogin = req.body;
   const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ?`;
   // check if there is a user registered with those credentials
-  mysqlPool.query(loginQuery, [email], (err, result, fields) => {
+  mysqlPool.query(loginQuery, [email], async (err, result, fields) => {
     if (err) {
       console.error(err?.message);
       res.status(404).json({
         mssg: "Problema detectado a la hora de comprobar credenciales de usuario",
       });
       throw err;
-    }else{
+    } else {
       // if user exists we need to hash the password and a role to generate a token
-      bcrypt
-      .compare(password, (result as RowDataPacket[])[0].password)
-      .then(() => {
+      const passMatch = await bcrypt.compare(
+        password,
+        (result as RowDataPacket[])[0].password
+      );
+
+      if (passMatch) {
         const role = (result as RowDataPacket[])[0].role;
         const token = generateAuthToken(email, role);
-        res.status(200).json({ token });
         console.log("inicio de sesion se llevo a cabo satisfactoriamente.");
-        
-      })
-      .catch((err) => {
-        console.error(err);
-        if (err) throw err;
-      });
-    };
+        return res.status(200).json({ token });
+      } else {
+        return res
+          .status(500)
+          .json({ mssg: "Ocurrio un error validando credenciales" });
+      }
+    }
   });
+};
+
+export const validateToken = (req: Request, res: Response) => {
+  // extract token
+  const readedToken = req.header("x-auth-token")!;
+
+  // token validation
+  const { email, role } = verifyToken(readedToken) as VerifiedTokenType;
+
+  // check if email exists in the database with the role
+  const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ? AND role=?`;
+
+  mysqlPool.query(loginQuery, [email, role], (err, result, fields) => {
+    if (err) {
+      console.error(err?.message);
+      res.status(404).json({
+        mssg: "Problema detectado a la hora de comprobar credenciales de usuario para verificacion de token",
+        status: false,
+      });
+      throw err;
+    } else {
+      const { name, second_name, email } = (result as RowDataPacket[])[0];
+      console.log(name, second_name, email);
+
+      // we can set as valid this proccess
+      return res.status(200).json({
+        data: {
+          name,
+          second_name,
+          email,
+        },
+        status: true,
+      });
+    }
+  });
+  // return ok or error message
+};
+
+export const regenerateToken = (req: Request, res: Response) => {
+  // extract token
+  const readedToken = req.header("x-auth-token")!;
+
+  // extract email and role from token
+  const { email, role } = verifyToken(readedToken) as VerifiedTokenType;
+
+  // generate new token with old one's information
+  const newGeneratedToken = generateAuthToken(email, role);
+
+  // return new generated token
+  return res.status(200).json({ token: newGeneratedToken });
 };
