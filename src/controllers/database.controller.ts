@@ -80,3 +80,26 @@ export const createTables = (req: Request, res: Response) => {
     res.status(500).json({ error });
   }
 };
+
+export const getTableData = (req: Request, res: Response) => {
+  try {
+    // check table name
+    const tableName: string = req.params.table_name;
+    const tableQuery: string = `SELECT * FROM ${tableName }`;
+
+    mysqlPool.query(tableQuery, (err, result) => {
+      if (err) {
+        console.error(err?.message);
+        res.status(404).json({
+          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
+        });
+        throw err;
+      }else{
+        res.status(200).json({ data:result });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};

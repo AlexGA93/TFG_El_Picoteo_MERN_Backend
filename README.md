@@ -194,15 +194,15 @@ The first couple of commands that we'll need are:
 
 - Create manually a table
     ```
-    CREATE TABLE IF NOT EXISTS Usuarios 
-    (
-        id INT auto_increment, 
+    CREATE TABLE IF NOT EXISTS Usuarios(
+        id INT AUTO_INCREMENT, 
         name VARCHAR(100), 
-        second_name varchar(100), 
-        email varchar(100), 
-        password varchar(255), 
-        role varchar(100),
-        primary key(id)
+        second_name VARCHAR(100), 
+        email VARCHAR(100), 
+        password VARCHAR(255),
+        role VARCHAR(100),
+        
+        PRIMARY KEY(id)
     );
     ```
 - Show a table's content
