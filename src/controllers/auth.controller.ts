@@ -21,7 +21,7 @@ export const registerUser = (req: Request, res: Response) => {
   }
   // extract user information
   let { name, second_name, email, password, role }: UserBody = req.body;
-
+  
   // check if there is email in users table
   const checkEmailQuery: string =
     "SELECT * FROM Usuarios WHERE email NOT REGEXP '^[^@]+@[^@]+.[^@]{2,}$';";
