@@ -103,3 +103,44 @@ export const getTableData = (req: Request, res: Response) => {
     res.status(500).json({ error });
   }
 };
+
+export const getGlobalInventoryData = (req: Request, res: Response) => {
+  try {
+    let query: string = "SELECT Almacen.nombre, Inventario.unidades, Almacen.precio_unidad, ROUND((Inventario.unidades * Almacen.precio_unidad), 2) AS 'precio_total', Inventario.fecha FROM Almacen INNER JOIN Inventario ON Almacen.id = Inventario.id_almacen;";
+    mysqlPool.query(query, (err, result) => {
+      if (err) {
+        console.error(err?.message);
+        res.status(404).json({
+          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
+        });
+        throw err;
+      }else{
+        res.status(200).json({ data:result });
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+}
+
+export const getGlobalStoreData = (req: Request, res: Response) => {
+  try {
+    let query: string = "SELECT Productos.id , Almacen.id , Almacen.nombre , Productos.nombre , Productos.precio_producto FROM Almacen JOIN Inventario ON Almacen.id = Inventario.id_almacen  JOIN Recetas ON Almacen.id = Recetas.id_almacen  JOIN Productos ON Recetas.id_producto = Productos.id;";
+    mysqlPool.query(query, (err, result) => {
+      if (err) {
+        console.error(err?.message);
+        res.status(404).json({
+          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
+        });
+        throw err;
+      }else{
+        res.status(200).json({ data:result });
+      }
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+}
