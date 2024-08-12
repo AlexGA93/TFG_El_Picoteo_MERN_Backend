@@ -126,7 +126,7 @@ export const getGlobalInventoryData = (req: Request, res: Response) => {
 
 export const getGlobalStoreData = (req: Request, res: Response) => {
   try {
-    let query: string = "SELECT Productos.id , Almacen.id , Almacen.nombre , Productos.nombre , Productos.precio_producto FROM Almacen JOIN Inventario ON Almacen.id = Inventario.id_almacen  JOIN Recetas ON Almacen.id = Recetas.id_almacen  JOIN Productos ON Recetas.id_producto = Productos.id;";
+    let query: string = "SELECT Productos.id , Almacen.id AS id_almacen , Almacen.nombre AS ingrediente, Productos.nombre AS nombre_producto , Productos.precio_producto AS precio_producto FROM Almacen JOIN Inventario ON Almacen.id = Inventario.id_almacen  JOIN Recetas ON Almacen.id = Recetas.id_almacen  JOIN Productos ON Recetas.id_producto = Productos.id;";
     mysqlPool.query(query, (err, result) => {
       if (err) {
         console.error(err?.message);

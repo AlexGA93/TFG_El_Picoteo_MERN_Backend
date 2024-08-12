@@ -55,6 +55,8 @@ export const authenticationByAdmin = (
 
     const decoded: string | JwtPayload = jwt.verify(token, jwtKey);
 
+    console.log(decoded);
+
     if (
       ((decoded as JwtPayload).email as string).match(emailRegex) &&
       (decoded as JwtPayload).role === "admin"
@@ -116,7 +118,8 @@ export const authenticationByEmployee = (
   
       const decoded: string | JwtPayload = jwt.verify(token, jwtKey);
       
-  
+      console.log(decoded);
+      
       if (
         ((decoded as JwtPayload).email as string).match(emailRegex) &&
         (decoded as JwtPayload).role === "employee" || (decoded as JwtPayload).role === "admin" 
