@@ -35,6 +35,10 @@ services:
       - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
     volumes:
       - mysql-data:/var/lib/mysql
+networks:
+  default:
+    driver: bridge
+
 volumes:
   mysql-data: 
 
