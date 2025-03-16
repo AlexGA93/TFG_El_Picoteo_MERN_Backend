@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { RowDataPacket } from "mysql2";
 import mysqlPool from "../db/db";
 import { readFile } from "../utils/readFile";
-import fs from "fs";
+import fs, { stat } from "fs";
 import path from "path";
 import { ReadLine, createInterface } from "readline";
 
@@ -107,7 +107,7 @@ export const getTableData = (req: Request, res: Response) => {
 export const getGlobalInventoryData = (req: Request, res: Response) => {
   try {
     let query: string = "SELECT Almacen.nombre, Inventario.unidades, Almacen.precio_unidad, ROUND((Inventario.unidades * Almacen.precio_unidad), 2) AS 'precio_total', Inventario.fecha FROM Almacen INNER JOIN Inventario ON Almacen.id = Inventario.id_almacen;";
-    mysqlPool.query(query, (err, result) => {
+    mysqlPool.query(query, (err, result: RowDataPacket[]) => {
       if (err) {
         console.error(err?.message);
         res.status(404).json({
@@ -144,3 +144,77 @@ export const getGlobalStoreData = (req: Request, res: Response) => {
     res.status(500).json({ error });
   }
 }
+
+export const addProduct = (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    const { name, price, quantity } = req.body;
+
+    // Usamos parámetros preparados para evitar inyecciones SQL
+    const queryCheckProduct = `SELECT * FROM Almacen WHERE nombre = ?`;
+
+    mysqlPool.query(queryCheckProduct, [name], (err, result: any[]) => {
+      if (err) {
+        console.error(err?.message);
+        return res.status(500).json({
+          status: "error",
+          mssg: "Problema detectado a la hora de comprobar conexión con las tablas",
+        });
+      }
+
+      // Si el producto ya existe, actualizamos la cantidad en Inventario
+      if (result.length > 0) {
+        const queryUpdateQuantity = `UPDATE Inventario SET unidades = unidades + ? WHERE id_almacen = ?`;
+        
+        mysqlPool.query(queryUpdateQuantity, [quantity, result[0].id], (updateErr) => {
+          if (updateErr) {
+            console.error(updateErr?.message);
+            return res.status(500).json({
+              status: "error",
+              mssg: "Error al actualizar el inventario",
+            });
+          }
+          return res.status(200).json({
+            status: "success",
+            mssg: `Producto ${name} actualizado correctamente en el inventario.`,
+          });
+        });
+      } else {
+        // Si el producto no existe, lo insertamos
+        const queryInsertProduct = `INSERT INTO Almacen (nombre, precio_unidad) VALUES (?, ?)`;
+
+        mysqlPool.query(queryInsertProduct, [name, price], (insertErr, insertResult) => {
+          if (insertErr) {
+            console.error(insertErr?.message);
+            return res.status(500).json({
+              status: "error",
+              mssg: "Error al insertar el producto en Almacen",
+            });
+          }
+
+          // Después de insertar el producto, lo agregamos al inventario
+          const queryInsertInventory = `INSERT INTO Inventario (id_almacen, unidades, fecha) VALUES (?, ?, ?)`;
+
+          mysqlPool.query(queryInsertInventory, [(insertResult as any).insertId, quantity, new Date()], (insertInventoryErr) => {
+            if (insertInventoryErr) {
+              console.error(insertInventoryErr?.message);
+              return res.status(500).json({
+                status: "error",
+                mssg: "Error al agregar el producto al inventario",
+              });
+            }
+
+            return res.status(201).json({
+              status: "success",
+              mssg: `Producto ${name} insertado correctamente en el inventario.`,
+            });
+          });
+        });
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
