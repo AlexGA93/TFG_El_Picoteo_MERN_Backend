@@ -1,5 +1,5 @@
 # latest compose version
-version: '3.8'
+# version: '3.8'
 
 # services (containers)
 services:
@@ -35,6 +35,10 @@ services:
       - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
     volumes:
       - mysql-data:/var/lib/mysql
+networks:
+  default:
+    driver: bridge
+
 volumes:
   mysql-data: 
 

@@ -275,6 +275,11 @@ At this point we have a previously created table to store any user that our proj
 - 
 
 
+docker compose -f docker-compose.yml up
+
+docker exec -it docker_container_name -l
+
+docker compose down
 
 
 
@@ -346,3 +351,21 @@ mirar como
 https://github.com/UskoKruM/restapi-nodejs-express-mysql/blob/master/src/controllers/language.controller.js
 Segun pone en este proyecto, no parece que sea necesario el estar referenciando el acceso continuo a la base de datos.. .se nombra y ya
 */
+
+
+
+
+
+Actualizacion de docker
+
+sudo systemctl status docker
+
+pacman -S docker
+pacman -S docker-compose
+docker-compose --version
+
+docker-compose -f docker-compose-dev.yml down
+docker-compose -f docker-compose-dev.yml up --force-recreate
+
+sudo systemctl restart docker
+

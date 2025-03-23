@@ -1,13 +1,19 @@
 import { Router } from "express";
-import { checkDDBB, getDatabaseTables, createTables, getTableData } from "../controllers/database.controller";
-import { authenticationByAdmin } from "../auth/auth";
+import { checkDDBB, getDatabaseTables, createTables, getTableData, getGlobalInventoryData, getGlobalStoreData, addProduct } from "../controllers/database.controller";
+import { authenticationByAdmin, authenticationByBoth } from "../auth/auth";
 const router: Router = Router();
 
+// ADMIN
 router.get("/", authenticationByAdmin, checkDDBB);
 router.get("/create-tables", authenticationByAdmin, createTables);
 
-// tables
-router.get("/tables",authenticationByAdmin, getDatabaseTables);
-router.get("/tables/:table_name", authenticationByAdmin, getTableData);
+// Employee + Admin
+router.get("/tables",authenticationByBoth, getDatabaseTables);
+router.get("/inventory", authenticationByBoth, getGlobalInventoryData);
+router.get("/store", authenticationByBoth, getGlobalStoreData);
+router.get("/tables/:table_name", authenticationByBoth, getTableData);
+
+// add new product
+router.post("/add-product-inventory", authenticationByAdmin, addProduct); 
 
 export default router;
