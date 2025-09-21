@@ -38,7 +38,7 @@ export const registerUser = (req: Request, res: Response) => {
       );
 
       // insert user into the table
-      const registerUserQuery: string = `INSERT INTO Usuarios(name, second_name, email, password, role) values(? , ?, ?, ?, ?);`;
+      const registerUserQuery: string = `INSERT INTO Usuarios(nombre,apellidos, email, password, rol) values(? , ?, ?, ?, ?);`;
       mysqlPool.query(
         registerUserQuery,
         [name, second_name, email, hashingPassword(password!), role],

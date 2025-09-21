@@ -55,8 +55,9 @@ export const authenticationByAdmin = (
 
     const decoded: string | JwtPayload = jwt.verify(token, jwtKey);
 
-    console.log(decoded);
-
+    console.log({ decoded });
+    console.log(((decoded as JwtPayload).email as string).match(emailRegex) );
+    
     if (
       ((decoded as JwtPayload).email as string).match(emailRegex) &&
       (decoded as JwtPayload).role === "admin"

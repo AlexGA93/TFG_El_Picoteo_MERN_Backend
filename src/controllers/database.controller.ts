@@ -32,31 +32,6 @@ export const checkDDBB = (req: Request, res: Response): void => {
   }
 };
 
-export const getDatabaseTables = (req: Request, res: Response): void => {
-  try {
-    const showTablesQuery: string = "SHOW TABLES;";
-    mysqlPool.query(showTablesQuery, (err, result, fields) => {
-      if (err) {
-        console.error(err?.message);
-        throw err;
-      }
-
-      if (result) {
-        res
-          .status(200)
-          .json({ mssg: "Tablas encontradas en la base de datos.", result });
-      } else {
-        res.status(404).json({
-          mssg: "No se ha podido devolver las tabals en la base de datos.",
-        });
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-};
-
 export const createTables = (req: Request, res: Response) => {
   try {
     const readedQueries = fs.readFileSync(
@@ -81,6 +56,91 @@ export const createTables = (req: Request, res: Response) => {
   }
 };
 
+export const insertIntoTables = (req: Request, res: Response) => {
+    try {
+    const readedQueries = fs.readFileSync(
+      path.join(__dirname, `../db/Data_mockups.sql`),
+      "utf-8"
+    );
+
+    mysqlPool.query(readedQueries, (err, results) => {
+      if (err) throw err;
+
+      if (results) {
+        res.status(200).json({ mssg: "Datos insertados en las tablas sin errores." });
+      } else {
+        res
+          .status(404)
+          .json({ mssg: "Ha habido un problema con la insercion en las tablas." });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
+
+export const getGlobalInventoryData = (req: Request, res: Response) => {
+  try {
+    let query: string = `SELECT * FROM Inventario;`;
+    
+    mysqlPool.query(query, (err, data: RowDataPacket[]) => {
+      if (err) {
+        console.error(err?.message);
+        res.status(404).json({
+          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
+        });
+        throw err;
+      }else{
+        res.status(200).json({ data });
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const getDatabaseTables = (req: Request, res: Response): void => {
+  try {
+    const showTablesQuery: string = "SHOW TABLES;";
+    mysqlPool.query(showTablesQuery, (err, result, fields) => {
+      if (err) {
+        console.error(err?.message);
+        throw err;
+      }
+
+      if (result) {
+        res
+          .status(200)
+          .json({ mssg: "Tablas encontradas en la base de datos.", result });
+      } else {
+        res.status(404).json({
+          mssg: "No se ha podido devolver las tabals en la base de datos.",
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error });
+  }
+};
 export const getTableData = (req: Request, res: Response) => {
   try {
     // check table name
@@ -104,25 +164,7 @@ export const getTableData = (req: Request, res: Response) => {
   }
 };
 
-export const getGlobalInventoryData = (req: Request, res: Response) => {
-  try {
-    let query: string = "SELECT Almacen.nombre, Inventario.unidades, Almacen.precio_unidad, ROUND((Inventario.unidades * Almacen.precio_unidad), 2) AS 'precio_total', Inventario.fecha FROM Almacen INNER JOIN Inventario ON Almacen.id = Inventario.id_almacen;";
-    mysqlPool.query(query, (err, result: RowDataPacket[]) => {
-      if (err) {
-        console.error(err?.message);
-        res.status(404).json({
-          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
-        });
-        throw err;
-      }else{
-        res.status(200).json({ data:result });
-      }
-    })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-}
+
 
 export const getGlobalStoreData = (req: Request, res: Response) => {
   try {
