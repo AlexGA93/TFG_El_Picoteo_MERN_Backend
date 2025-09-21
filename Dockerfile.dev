@@ -2,7 +2,7 @@
 FROM node:20
  
 # Clear npm cache before installing any dependency
-RUN npm cache clean --force
+# RUN npm cache clean --force
 
 # Remove any existing lockfile and node_modules to avoid issues
 RUN rm -rf /root/.npm /root/.npm/_logs /root/.npm/_cache
