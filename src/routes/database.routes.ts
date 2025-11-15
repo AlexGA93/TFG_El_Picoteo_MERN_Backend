@@ -5,8 +5,8 @@ import {
   createTables,
   getTableData,
   getGlobalInventoryData,
-  getGlobalStoreData,
-  addProduct,
+  // getGlobalStoreData,
+  addProductInventory,
   editProduct,
   deleteProduct,
   insertIntoTables,
@@ -42,11 +42,11 @@ router.get("/inventario", authenticationByBoth, getGlobalInventoryData);
 // Employee + Admin
 router.get("/tables", authenticationByBoth, getDatabaseTables);
 router.get("/inventory", authenticationByBoth, getGlobalInventoryData);
-router.get("/store", authenticationByBoth, getGlobalStoreData);
+// router.get("/store", authenticationByBoth, getGlobalStoreData);
 router.get("/tables/:table_name", authenticationByBoth, getTableData);
 
-// add new product
-router.post("/add-product-inventory", authenticationByAdmin, addProduct);
-router.put("/edit-product-inventory", authenticationByAdmin, editProduct);
-router.delete("/delete-product-inventory/:name", authenticationByAdmin, deleteProduct);
+// add new product (Inventario)
+router.post("/add-product-inventory", authenticationByAdmin, addProductInventory);
+// router.put("/edit-product-inventory", authenticationByAdmin, editProduct);
+// router.delete("/delete-product-inventory/:name", authenticationByAdmin, deleteProduct);
 export default router;

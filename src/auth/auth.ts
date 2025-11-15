@@ -123,7 +123,7 @@ export const authenticationByEmployee = (
       
       if (
         ((decoded as JwtPayload).email as string).match(emailRegex) &&
-        (decoded as JwtPayload).role === "employee" || (decoded as JwtPayload).role === "admin" 
+        ((decoded as JwtPayload).role === "employee" || (decoded as JwtPayload).role === "admin")
       ) {
         console.log("autenticacion existosa");
         next();

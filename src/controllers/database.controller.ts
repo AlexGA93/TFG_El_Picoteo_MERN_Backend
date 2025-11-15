@@ -2,16 +2,16 @@ import { config } from "dotenv";
 import { Request, Response } from "express";
 import { RowDataPacket } from "mysql2";
 import mysqlPool from "../db/db";
-import { readFile } from "../utils/readFile";
 import fs, { stat } from "fs";
 import path from "path";
-import { ReadLine, createInterface } from "readline";
+import { constants } from "../utils/constants";
 
 config();
 
 export const checkDDBB = (req: Request, res: Response): void => {
   try {
-    const checkDDBBQuery: string = "SHOW DATABASES";
+    const checkDDBBQuery: string = constants.SQL_QUERIES.DATABASE.GET_ALL_DATABASES;
+
     mysqlPool.query(checkDDBBQuery, (err, result, fields) => {
       if (err) throw err;
 
@@ -82,7 +82,7 @@ export const insertIntoTables = (req: Request, res: Response) => {
 
 export const getGlobalInventoryData = (req: Request, res: Response) => {
   try {
-    let query: string = `SELECT * FROM Inventario;`;
+    let query: string = constants.SQL_QUERIES.DATABASE.GET_GLOBAL_INVENTORY;
     
     mysqlPool.query(query, (err, data: RowDataPacket[]) => {
       if (err) {
@@ -101,25 +101,9 @@ export const getGlobalInventoryData = (req: Request, res: Response) => {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const getDatabaseTables = (req: Request, res: Response): void => {
   try {
-    const showTablesQuery: string = "SHOW TABLES;";
+    const showTablesQuery: string = constants.SQL_QUERIES.DATABASE.GET_GLOBAL_TABLES;
     mysqlPool.query(showTablesQuery, (err, result, fields) => {
       if (err) {
         console.error(err?.message);
@@ -141,11 +125,12 @@ export const getDatabaseTables = (req: Request, res: Response): void => {
     res.status(500).json({ error });
   }
 };
+
 export const getTableData = (req: Request, res: Response) => {
   try {
     // check table name
     const tableName: string = req.params.table_name;
-    const tableQuery: string = `SELECT * FROM ${tableName }`;
+    const tableQuery: string = constants.SQL_QUERIES.DATABASE.GET_TABLE_DATA(tableName);
 
     mysqlPool.query(tableQuery, (err, result) => {
       if (err) {
@@ -164,38 +149,36 @@ export const getTableData = (req: Request, res: Response) => {
   }
 };
 
+// export const getGlobalStoreData = (req: Request, res: Response) => {
+//   try {
+//     let query: string = "SELECT Productos.id , Almacen.id AS id_almacen , Almacen.nombre AS ingrediente, Productos.nombre AS nombre_producto , Productos.precio_producto AS precio_producto FROM Almacen JOIN Inventario ON Almacen.id = Inventario.id_almacen  JOIN Recetas ON Almacen.id = Recetas.id_almacen  JOIN Productos ON Recetas.id_producto = Productos.id;";
+//     mysqlPool.query(query, (err, result) => {
+//       if (err) {
+//         console.error(err?.message);
+//         res.status(404).json({
+//           mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
+//         });
+//         throw err;
+//       }else{
+//         res.status(200).json({ data:result });
+//       }
+//     })
 
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error });
+//   }
+// }
 
-export const getGlobalStoreData = (req: Request, res: Response) => {
-  try {
-    let query: string = "SELECT Productos.id , Almacen.id AS id_almacen , Almacen.nombre AS ingrediente, Productos.nombre AS nombre_producto , Productos.precio_producto AS precio_producto FROM Almacen JOIN Inventario ON Almacen.id = Inventario.id_almacen  JOIN Recetas ON Almacen.id = Recetas.id_almacen  JOIN Productos ON Recetas.id_producto = Productos.id;";
-    mysqlPool.query(query, (err, result) => {
-      if (err) {
-        console.error(err?.message);
-        res.status(404).json({
-          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
-        });
-        throw err;
-      }else{
-        res.status(200).json({ data:result });
-      }
-    })
-
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-}
-
-export const addProduct = (req: Request, res: Response) => {
+export const addProductInventory = (req: Request, res: Response) => {
   try {
     console.log(req.body);
-    const { nombre, precio_unidad, precio_total, unidades } = req.body;
+    const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
 
     // Usamos parámetros preparados para evitar inyecciones SQL
-    const queryCheckProduct = `SELECT * FROM Almacen WHERE nombre = ?`;
+    const queryCheckProduct = constants.SQL_QUERIES.DATABASE.INSERT_INVENTORY_PRODUCT;
 
-    mysqlPool.query(queryCheckProduct, [nombre], (err, result: any[]) => {
+    mysqlPool.query(queryCheckProduct, [nombre, tipo, unidades, n_unidades, proveedor, precio_unidad], (err, result: any[]) => {
       if (err) {
         console.error(err?.message);
         return res.status(500).json({
@@ -206,9 +189,9 @@ export const addProduct = (req: Request, res: Response) => {
 
       // Si el producto ya existe, actualizamos la cantidad en Inventario
       if (result.length > 0) {
-        const queryUpdateQuantity = `UPDATE Inventario SET unidades = unidades + ? WHERE id_almacen = ?`;
+        const queryUpdateQuantity = constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT;
         
-        mysqlPool.query(queryUpdateQuantity, [unidades, result[0].id], (updateErr) => {
+        mysqlPool.query(queryUpdateQuantity, [tipo, unidades, n_unidades, proveedor, precio_unidad, nombre], (updateErr) => {
           if (updateErr) {
             console.error(updateErr?.message);
             return res.status(500).json({

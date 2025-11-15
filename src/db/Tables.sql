@@ -32,6 +32,8 @@ CREATE TABLE Ingredientes(
   id INT NOT NULL AUTO_INCREMENT,
   id_producto_stock INT NOT NULL,
   id_inventario INT NOT NULL,
+  cantidades FLOAT NOT NULL,
+  unidad ENUM('kg', 'litros', 'unidad', 'metros', 'gramos') NOT NULL,
   fecha_registro DATETIME NOT NULL,
   
   PRIMARY KEY (id),
@@ -80,24 +82,24 @@ INSERT INTO Stock (nombre_producto, precio_producto) VALUES
 -- Bizcocho: Harina, Huevos, Azúcar, Mantequilla
 -- Tarta: Harina, Huevos, Azúcar, Mantequilla, Leche
 -- ====================================
-INSERT INTO Ingredientes (id_producto_stock, id_inventario, fecha_registro) VALUES
+INSERT INTO Ingredientes (id_producto_stock, id_inventario,cantidades, fecha_registro) VALUES
 -- Pan casero
-(1, 1, '2025-01-22 09:00:00'),
-(1, 2, '2025-01-22 09:00:00'),
-(1, 3, '2025-01-22 09:00:00'),
+(1, 1, 0.25, 'kg', '2025-01-22 09:00:00'),
+(1, 2, 0.10, 'litros', '2025-01-22 09:00:00'),
+(1, 3, 2, 'unidad', '2025-01-22 09:00:00'),
 
 -- Bizcocho de vainilla
-(2, 1, '2025-01-22 09:10:00'),
-(2, 3, '2025-01-22 09:10:00'),
-(2, 4, '2025-01-22 09:10:00'),
-(2, 5, '2025-01-22 09:10:00'),
+(2, 1, 0.30, 'kg', '2025-01-22 09:10:00'),
+(2, 3, 3, 'unidad', '2025-01-22 09:10:00'),
+(2, 4, 0.20, 'kg', '2025-01-22 09:10:00'),
+(2, 5, 100, 'gramos', '2025-01-22 09:10:00'),
 
 -- Tarta de chocolate
-(3, 1, '2025-01-22 09:20:00'),
-(3, 2, '2025-01-22 09:20:00'),
-(3, 3, '2025-01-22 09:20:00'),
-(3, 4, '2025-01-22 09:20:00'),
-(3, 5, '2025-01-22 09:20:00');
+(3, 1, 0.50, 'kg', '2025-01-22 09:20:00'),
+(3, 2, 0.20, 'litros', '2025-01-22 09:20:00'),
+(3, 3, 4, 'unidad', '2025-01-22 09:20:00'),
+(3, 4, 0.30, 'kg', '2025-01-22 09:20:00'),
+(3, 5, 150, 'gramos', '2025-01-22 09:20:00');
 
 -- ====================================
 -- Datos para la tabla Pagos

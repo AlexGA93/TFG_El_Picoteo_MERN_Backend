@@ -1,0 +1,10 @@
+PRUEBAS PARA HOY 15/11/25
+============================
+comprobar estado de ddbb
+establecer esquema de funcionamiento
+
+rutas de inventario, almacen, recetas, pagos
+
+register - done
+login - done
+
