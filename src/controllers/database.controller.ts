@@ -80,27 +80,6 @@ export const insertIntoTables = (req: Request, res: Response) => {
   }
 };
 
-export const getGlobalInventoryData = (req: Request, res: Response) => {
-  try {
-    let query: string = constants.SQL_QUERIES.DATABASE.GET_GLOBAL_INVENTORY;
-    
-    mysqlPool.query(query, (err, data: RowDataPacket[]) => {
-      if (err) {
-        console.error(err?.message);
-        res.status(404).json({
-          mssg: "Problema detectado a la hora de comprobar conexion con las tablas",
-        });
-        throw err;
-      }else{
-        res.status(200).json({ data });
-      }
-    })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error });
-  }
-}
-
 export const getDatabaseTables = (req: Request, res: Response): void => {
   try {
     const showTablesQuery: string = constants.SQL_QUERIES.DATABASE.GET_GLOBAL_TABLES;

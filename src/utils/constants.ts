@@ -15,6 +15,27 @@ export const constants = {
             UPDATE_USER_NAME: `UPDATE Usuarios SET name=?, second_name=? WHERE id=?;`
         },
         DATABASE: {
+            INVENTARIO: {
+                GET_ALL: `SELECT * FROM Inventario;`,
+                GET_BY_ID: `SELECT * FROM Inventario WHERE id=?;`,
+                INSERT_PRODUCT: `INSERT INTO Inventario(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad) VALUES (?, ?, ?, ?, ?, ?);`,
+                UPDATE_PRODUCT: `UPDATE Inventario SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
+                DELETE_PRODUCT: `DELETE FROM Inventario WHERE nombre=?;`  
+            },
+            STOCK: {
+                GET_ALL: `SELECT * FROM Stock;`,
+                GET_BY_ID: `SELECT * FROM Stock WHERE id=?;`,
+                INSERT_STOCK_PRODUCT: `INSERT INTO Stock(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad) VALUES (?, ?, ?, ?, ?, ?);`,
+                UPDATE_STOCK_PRODUCT: `UPDATE Stock SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
+                DELETE_STOCK_PRODUCT: `DELETE FROM Stock WHERE nombre=?;`
+            },
+            INGREDIENTES: {
+                GET_ALL: `SELECT * FROM Ingredientes;`,
+                GET_BY_ID: `SELECT * FROM Ingredientes WHERE id=?;`,
+                INSERT_INGREDIENT: `INSERT INTO Ingredientes(nombre, cantidad, unidad_medida) VALUES (?, ?, ?);`,
+                UPDATE_INGREDIENT: `UPDATE Ingredientes SET cantidad=?, unidad_medida=? WHERE nombre=?;`,
+                DELETE_INGREDIENT: `DELETE FROM Ingredientes WHERE nombre=?;`
+            },
             GET_GLOBAL_TABLES: `SHOW TABLES;`,
             GET_ALL_DATABASES: `SHOW DATABASES;`,
             GET_GLOBAL_INVENTORY:`SELECT * FROM Inventario;` ,
