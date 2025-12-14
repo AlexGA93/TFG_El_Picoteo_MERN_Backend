@@ -369,3 +369,50 @@ docker-compose -f docker-compose-dev.yml up --force-recreate
 
 sudo systemctl restart docker
 
+### Backup de DDBB previo cambios
+
+- Ver servicios de compose
+```
+docker-compose ps
+```
+- Ver contenedores en ejecucion
+```
+docker ps
+```
+- Busca el servicio (ej. mysqldb) o el contenedor (ej. tfg_el_picoteo_mern_backend-mysqldb-1).
+```
+CONTAINER ID   IMAGE                                COMMAND                  CREATED         STATUS         PORTS                                                    NAMES
+9201666ed940   tfg_el_picoteo_mern_backend-server   "docker-entrypoint.s…"   9 minutes ago   Up 9 minutes   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp              tfg_el_picoteo_mern_backend-server-1
+ee59fd3c89c2   mysql                                "docker-entrypoint.s…"   9 minutes ago   Up 9 minutes   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp, 33060/tcp   tfg_el_picoteo_mern_backend-mysqldb-1
+
+ 
+```
+- Hacemos volcado del backup
+```
+docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 sh -c 'exec mysqldump -u root -p"123456" ElPicoteo' > src/db/backups/backup-$(date +%F).sql
+```
+
+- Tras hacer el backup vamos a actualizar nuestro entorno.
+
+
+Usaremos un metodo no destructivo, aplicando solo os cambios sin borrar nada
+```
+echo "ALTER TABLE Ingredientes 
+ADD COLUMN IF NOT EXISTS cantidades FLOAT NOT NULL DEFAULT 0, 
+ADD COLUMN IF NOT EXISTS unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
+| docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo`
+```
+
+dentro de la terminal ejecutamos:
+```
+cat src/db/Data_mockups.sql | docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo
+```
+Y para verificar que los cambios se han aplicado:
+```
+docker-compose exec -T mysqldb mysql -u root -p"123456" -e "DESCRIBE Ingredientes;" ElPicoteo
+```
+
+cd /home/elros/Documents/Programming/TFG/TFG_El_Picoteo_MERN_Backend && echo "ALTER TABLE Ingredientes 
+ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0, 
+ADD COLUMN unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
+| docker-compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo

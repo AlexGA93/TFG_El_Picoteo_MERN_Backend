@@ -1,6 +1,3 @@
-# latest compose version
-version: '3.8'
-
 # services (containers)
 services:
   server:

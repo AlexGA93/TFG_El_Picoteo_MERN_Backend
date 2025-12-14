@@ -7,6 +7,8 @@ import { generateAuthToken, verifyToken } from "../auth/auth";
 import mysqlPool from "../db/db";
 import { hashingPassword } from "../security/hashing";
 import { UserBody, UserLogin, VerifiedTokenType } from "../types/types";
+import { constants } from "../utils/constants";
+import { emailCheckRegex } from "../utils/utilities";
 config();
 
 export const registerUser = (req: Request, res: Response) => {
@@ -21,12 +23,12 @@ export const registerUser = (req: Request, res: Response) => {
   }
   // extract user information
   let { name, second_name, email, password, role }: UserBody = req.body;
+  console.log({ name, second_name, email, password, role });
+  
   
   // check if there is email in users table
-  const checkEmailQuery: string =
-    "SELECT * FROM Usuarios WHERE email NOT REGEXP '^[^@]+@[^@]+.[^@]{2,}$';";
-
-  mysqlPool.query(checkEmailQuery, (err, result, fields) => {
+  const checkEmailQuery: string = constants.SQL_QUERIES.AUTH.CHECK_EMAIL;
+  mysqlPool.query(checkEmailQuery, [email], (err, result, fields) => {
     if (err) {
       console.error(err?.message);
       throw err;
@@ -38,7 +40,10 @@ export const registerUser = (req: Request, res: Response) => {
       );
 
       // insert user into the table
-      const registerUserQuery: string = `INSERT INTO Usuarios(nombre,apellidos, email, password, rol) values(? , ?, ?, ?, ?);`;
+      const registerUserQuery: string = constants.SQL_QUERIES.AUTH.INSERT_USER;
+
+      console.log([name, second_name, email, hashingPassword(password!), role]);
+      
       mysqlPool.query(
         registerUserQuery,
         [name, second_name, email, hashingPassword(password!), role],
@@ -50,6 +55,8 @@ export const registerUser = (req: Request, res: Response) => {
             });
             throw err;
           }
+          console.log({ email, role });
+          
           const token = generateAuthToken(email, role);
 
           res.status(200).json({ token });
@@ -75,7 +82,8 @@ export const login = async (req: Request, res: Response) => {
   // extract user and password from body request
 
   let { email, password }: UserLogin = req.body;
-  const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ?`;
+  const loginQuery: string = constants.SQL_QUERIES.AUTH.CHECK_USER_BY_EMAIL;
+
   // check if there is a user registered with those credentials
   mysqlPool.query(loginQuery, [email], async (err, result, fields) => {
     if (err) {
@@ -113,7 +121,7 @@ export const validateToken = (req: Request, res: Response) => {
   const { email, role } = verifyToken(readedToken) as VerifiedTokenType;
 
   // check if email exists in the database with the role
-  const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ? AND role=?`;
+  const loginQuery: string = constants.SQL_QUERIES.AUTH.TOKEN_VALIDATION;
 
   mysqlPool.query(loginQuery, [email, role], (err, result, fields) => {
     if (err) {
@@ -125,8 +133,6 @@ export const validateToken = (req: Request, res: Response) => {
       throw err;
     } else {
       const { name, second_name, email } = (result as RowDataPacket[])[0];
-      console.log(name, second_name, email);
-
       // we can set as valid this proccess
       return res.status(200).json({
         data: {

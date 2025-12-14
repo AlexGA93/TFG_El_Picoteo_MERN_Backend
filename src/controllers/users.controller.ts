@@ -3,10 +3,11 @@ import { Request, Response } from "express";
 import { RowDataPacket } from "mysql2";
 import mysqlPool from "../db/db";
 import { UserBody } from "../types/types";
+import { constants } from "../utils/constants";
 config();
 
 export const getUsersFromTable = (req: Request, res: Response) => {
-  const getUsersFromTableQuery: string = "SELECT * FROM Usuarios";
+  const getUsersFromTableQuery: string = constants.SQL_QUERIES.USERS.GET_GLOBAL_USERS;
 
   mysqlPool.query(getUsersFromTableQuery, (err, result, fields) => {
     if (err) {
@@ -26,7 +27,8 @@ export const getUsersFromTable = (req: Request, res: Response) => {
 export const getUser = (req: Request, res: Response) => {
   // extract user from request
   const userId: string = req.params.id;
-  const findUserQuery: string = `SELECT * FROM Usuarios WHERE id=?`;
+  const findUserQuery: string = constants.SQL_QUERIES.USERS.GET_USER_BY_ID;
+
   // check if user with the id is in our table
   mysqlPool.query(findUserQuery, [userId], (err, result, fields) => {
     if (err) {
@@ -51,7 +53,7 @@ export const updateUser = (req: Request, res: Response) => {
   const userId: string = req.params.id;
   const newParameters = req.body;
 
-  const findUserQuery: string = `SELECT * FROM Usuarios WHERE id=?`;
+  const findUserQuery: string = constants.SQL_QUERIES.USERS.GET_USER_BY_ID;
   mysqlPool.query(findUserQuery, [userId], (err, result, fields) => {
     if (err) {
       console.error(err?.message);
@@ -71,7 +73,8 @@ export const updateUser = (req: Request, res: Response) => {
         }
       }
       
-      const updateUserQuery: string = `UPDATE Usuarios SET name=?, second_name=? WHERE id=?`;
+      const updateUserQuery: string = constants.SQL_QUERIES.USERS.UPDATE_USER_NAME;
+
       mysqlPool.query(
         updateUserQuery,
         [newPayload.name, newPayload.second_name, newPayload.id],
@@ -94,7 +97,7 @@ export const updateUser = (req: Request, res: Response) => {
 
 export const deleteUser = (req: Request, res: Response) => {
   const userId: string = req.params.id;
-  const findUserQuery: string = `SELECT * FROM Usuarios WHERE id=?`;
+  const findUserQuery: string = constants.SQL_QUERIES.USERS.GET_USER_BY_ID;
   mysqlPool.query(findUserQuery, [userId], (err, result, fields) => {
     if (err) {
       console.error(err?.message);
