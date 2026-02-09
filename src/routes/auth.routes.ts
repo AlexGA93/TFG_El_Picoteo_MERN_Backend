@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login, registerUser, regenerateToken, validateToken } from "../controllers";
+import { login, registerUser, regenerateToken, validateToken } from "../controllers/auth.controller";
 import { check } from "express-validator";
 import { validateJWT } from "../middleware/validate-jwt.middleware";
 import { emailRegex, passRegex } from "../utils/utilities";
@@ -19,10 +19,10 @@ router.post(
   check("password")
     .matches(passRegex, "i")
     .withMessage("Please enter a valid password"),
-  check("role").isString().withMessage("Role must have a valid value"),
-  check("role")
+  check("rol_usuario").isString().withMessage("rol_usuario must have a valid value"),
+  check("rol_usuario")
     .custom((value) => value === "admin" || value === "employee")
-    .withMessage("Role must be a valid one"),
+    .withMessage("rol_usuario must be a valid one"),
   registerUser
 );
 

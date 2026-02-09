@@ -1,9 +1,9 @@
 export interface UserBody {
-  name: string,
-  second_name: string,
+  nombre: string,
+  apellidos: string,
   email: string,
   password?: string,
-  role: string
+  rol_usuario: string
 }
 
 export interface UserLogin {
@@ -13,7 +13,7 @@ export interface UserLogin {
 
 export interface VerifiedTokenType {
   email: string;
-  role: string;
+  rol_usuario: string;
   iat: number;
   exp: number;
 }

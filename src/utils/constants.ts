@@ -5,14 +5,14 @@ export const constants = {
     SQL_QUERIES: {
         AUTH: {
             CHECK_EMAIL: `SELECT * FROM Usuarios WHERE email = ?;`,
-            INSERT_USER:`INSERT INTO Usuarios(nombre,apellidos, email, password, role) values(? , ?, ?, ?, ?);` ,
+            INSERT_USER:`INSERT INTO Usuarios(nombre,apellidos, email, password, rol_usuario) values(? , ?, ?, ?, ?);` ,
             CHECK_USER_BY_EMAIL: `SELECT * FROM Usuarios WHERE email = ?;`,
-            TOKEN_VALIDATION: `SELECT * FROM Usuarios WHERE email = ? AND role = ?;`
+            TOKEN_VALIDATION: `SELECT * FROM Usuarios WHERE email = ? AND rol_usuario = ?;`
         },
         USERS: {
             GET_GLOBAL_USERS: `SELECT * FROM Usuarios;`,
             GET_USER_BY_ID: `SELECT * FROM Usuarios WHERE id=?;`,
-            UPDATE_USER_NAME: `UPDATE Usuarios SET name=?, second_name=? WHERE id=?;`
+            UPDATE_USER_NAME: `UPDATE Usuarios SET nombre=?, apellidos=? WHERE id=?;`
         },
         DATABASE: {
             INVENTARIO: {

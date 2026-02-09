@@ -6,8 +6,8 @@ const jwtKey: string = "ElPicoteoTFG";
 const emailRegex: RegExp = /^[A-Za-z0-9._%+-]+@elpicoteo\.com$/;
 
 
-export const generateAuthToken = (email: string, role: string): string =>
-  jwt.sign({ email, role }, jwtKey, { expiresIn: "2h" });
+export const generateAuthToken = (email: string, rol_usuario: string): string =>
+  jwt.sign({ email, rol_usuario }, jwtKey, { expiresIn: "2h" });
 
 
 /**
@@ -30,7 +30,7 @@ export const verifyToken = (token: string): string | jwt.JwtPayload | VerifiedTo
 
 /**
  * * Middlewares to authenticate the user extracting the Json Web Token from the HTTP request
- * * and verify the user credentials like email and role.
+ * * and verify the user credentials like email and rol_usuario.
  * 
  * TODO: Check for use the method above 'verifyToken' instead of repeat the jwt verify each time.
  * 
@@ -60,7 +60,7 @@ export const authenticationByAdmin = (
     
     if (
       ((decoded as JwtPayload).email as string).match(emailRegex) &&
-      (decoded as JwtPayload).role === "admin"
+      (decoded as JwtPayload).rol_usuario === "admin"
     ) {
       console.log("autenticacion de admin existosa");
       next();
@@ -91,7 +91,7 @@ export const authenticationByEmployee = (
   
       if (
         ((decoded as JwtPayload).email as string).match(emailRegex) &&
-        (decoded as JwtPayload).role === "employee"
+        (decoded as JwtPayload).rol_usuario === "employee"
       ) {
         console.log("autenticacion de empleado existosa");
         next();
@@ -123,7 +123,8 @@ export const authenticationByEmployee = (
       
       if (
         ((decoded as JwtPayload).email as string).match(emailRegex) &&
-        ((decoded as JwtPayload).role === "employee" || (decoded as JwtPayload).role === "admin")
+        ((decoded as JwtPayload).rol_usuario === "employee" ||
+          (decoded as JwtPayload).rol_usuario === "admin")
       ) {
         console.log("autenticacion existosa");
         next();

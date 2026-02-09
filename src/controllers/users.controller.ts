@@ -38,11 +38,11 @@ export const getUser = (req: Request, res: Response) => {
       });
       throw err;
     } else {
-      const userData: UserBody = (({ name, second_name, email, role }) => ({
-        name,
-        second_name,
+      const userData: UserBody = (({ nombre, apellidos, email, rol_usuario }) => ({
+        nombre,
+        apellidos,
         email,
-        role,
+        rol_usuario,
       }))((result as RowDataPacket[])[0]);
       res.status(200).json(userData);
     }
@@ -77,7 +77,7 @@ export const updateUser = (req: Request, res: Response) => {
 
       mysqlPool.query(
         updateUserQuery,
-        [newPayload.name, newPayload.second_name, newPayload.id],
+        [newPayload.nombre, newPayload.apellidos, newPayload.id],
         (err, result, fields) => {
           if (err) {
             console.error(err?.message);
