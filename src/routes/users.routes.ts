@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticationByAdmin, authenticationByBoth } from "../auth/auth";
-import { deleteUser, getUser, getUsersFromTable, updateUser } from "../controllers";
+import { deleteUser, getUser, getUsersFromTable, updateUser } from "../controllers/users.controller";
 const router: Router = Router();
 
 router.get("/",authenticationByAdmin,  getUsersFromTable);

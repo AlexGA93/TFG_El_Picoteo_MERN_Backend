@@ -194,7 +194,7 @@ The first couple of commands that we'll need are:
 
 - Create manually a table
     ```
-    CREATE TABLE IF NOT EXISTS Usuarios(id INT NOT NULL AUTO_INCREMENT,name VARCHAR(100),second_name VARCHAR(100),email VARCHAR(100),password VARCHAR(255),role VARCHAR(100),PRIMARY KEY(id));
+    CREATE TABLE IF NOT EXISTS Usuarios(id INT NOT NULL AUTO_INCREMENT,name VARCHAR(100),second_name VARCHAR(100),email VARCHAR(100),password VARCHAR(255),rol_usuario VARCHAR(100),PRIMARY KEY(id));
     ```
 - Show a table's content
     ```
@@ -213,7 +213,7 @@ Once we have a proper built environment we must register a new user. In this cas
         "second_name": "Doe",
         "email":"johnDoe@elpicoteo.com",
         "password":"92johnDOE4ever",
-        "role":"admin"
+        "rol_usuario":"admin"
     }
     ```
     Jane Doe:
@@ -223,7 +223,7 @@ Once we have a proper built environment we must register a new user. In this cas
         "second_name": "Doe",
         "email":"janeDoe@elpicoteo.com",
         "password":"92johnDOE4ever",
-        "role":"employee"
+        "rol_usuario":"employee"
     }
     ```
 
@@ -247,7 +247,7 @@ Once we have a proper built environment we must register a new user. In this cas
     ```
     {
         "email": "janeDoe@elpicoteo.com",
-        "role": "employee",
+        "rol_usuario": "employee",
         "iat": 1695890162,
         "exp": 1695897362
     }
@@ -270,7 +270,7 @@ Once we have a proper built environment we must register a new user. In this cas
     }
     ```
     
-At this point we have a previously created table to store any user that our project needs and we've registered two users with different roles and we tested that we can login with their credentials. Next step is check if we can get their data or update them (We need to be cautelous with the user's role). 
+At this point we have a previously created table to store any user that our project needs and we've registered two users with different rol_usuarios and we tested that we can login with their credentials. Next step is check if we can get their data or update them (We need to be cautelous with the user's rol_usuario). 
 
 - 
 
@@ -348,7 +348,7 @@ FILTER DATABASE TABLES CONTENT
 aL INICIAR COMPROBARA SI EXISTE LA BASE DE DATOS
 aL MOMENTO DE CREAR LA BASE DE DATOS CREARA LA ESTRUCTURA DE TABLAS INTERNA
 mirar como
-https://github.com/UskoKruM/restapi-nodejs-express-mysql/blob/master/src/controllers/language.controller.js
+https://github.com/UskoKruM/restapi-nodejs-express-mysql/blob/master/src/control_usuariolers/language.control_usuarioler.js
 Segun pone en este proyecto, no parece que sea necesario el estar referenciando el acceso continuo a la base de datos.. .se nombra y ya
 */
 

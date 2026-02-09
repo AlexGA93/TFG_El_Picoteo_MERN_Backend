@@ -14,12 +14,12 @@ export const validateJWT = (req:Request, res: Response, next: NextFunction) => {
 
     try {
         // token validation
-        const {email, role} = (verifyToken(readedToken) as VerifiedTokenType);
+        const {email, rol_usuario} = (verifyToken(readedToken) as VerifiedTokenType);
         
-        // check if email exists in the database with the role
-        const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ? AND role=?`;
+        // check if email exists in the database with the rol_usuario
+        const loginQuery: string = `SELECT * FROM Usuarios WHERE email= ? AND rol_usuario=?`;
 
-        mysqlPool.query(loginQuery, [email, role], (err, result, fields) => {
+        mysqlPool.query(loginQuery, [email, rol_usuario], (err, result, fields) => {
             if (err) {
                 console.error(err?.message);
                 res.status(404).json({

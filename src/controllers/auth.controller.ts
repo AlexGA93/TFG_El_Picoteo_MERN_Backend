@@ -21,10 +21,12 @@ export const registerUser = (req: Request, res: Response) => {
       errors: errors.array(),
     });
   }
-  // extract user information
-  let { name, second_name, email, password, role }: UserBody = req.body;
-  console.log({ name, second_name, email, password, role });
+  // console.log({ req: req.body });
   
+  // extract user information
+  let { nombre, apellidos, email, password, rol_usuario }: UserBody = req.body;
+
+  console.log("REGISTRO - PASSWORD INTRODUCIDO:", password);
   
   // check if there is email in users table
   const checkEmailQuery: string = constants.SQL_QUERIES.AUTH.CHECK_EMAIL;
@@ -41,12 +43,9 @@ export const registerUser = (req: Request, res: Response) => {
 
       // insert user into the table
       const registerUserQuery: string = constants.SQL_QUERIES.AUTH.INSERT_USER;
-
-      console.log([name, second_name, email, hashingPassword(password!), role]);
-      
       mysqlPool.query(
         registerUserQuery,
-        [name, second_name, email, hashingPassword(password!), role],
+        [nombre, apellidos, email, hashingPassword(password!), rol_usuario],
         (err, result, fields) => {
           if (err) {
             console.error(err?.message);
@@ -55,9 +54,7 @@ export const registerUser = (req: Request, res: Response) => {
             });
             throw err;
           }
-          console.log({ email, role });
-          
-          const token = generateAuthToken(email, role);
+          const token = generateAuthToken(email, rol_usuario);
 
           res.status(200).json({ token });
           console.log("Ingreso de usuario finalizo satisfactoriamente.");
@@ -70,6 +67,7 @@ export const registerUser = (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+  
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -83,9 +81,15 @@ export const login = async (req: Request, res: Response) => {
 
   let { email, password }: UserLogin = req.body;
   const loginQuery: string = constants.SQL_QUERIES.AUTH.CHECK_USER_BY_EMAIL;
-
   // check if there is a user registered with those credentials
   mysqlPool.query(loginQuery, [email], async (err, result, fields) => {
+
+    console.log({
+      err,
+      result,
+      fields,
+    });
+
     if (err) {
       console.error(err?.message);
       res.status(404).json({
@@ -93,15 +97,21 @@ export const login = async (req: Request, res: Response) => {
       });
       throw err;
     } else {
-      // if user exists we need to hash the password and a role to generate a token
+      // if user exists we need to hash the password and a rol_usuario to generate a token
+      console.log("PASSWORD INTRODUCIDO:", password);
+      console.log("PASSWORD GUARDADO (HASH):", (result as RowDataPacket[])[0].password);
+      
       const passMatch = await bcrypt.compare(
         password,
         (result as RowDataPacket[])[0].password
       );
 
+      console.log({ passMatch, passwordIntroducido: password, passwordGuardado: (result as RowDataPacket[])[0].password });
+      
+
       if (passMatch) {
-        const role = (result as RowDataPacket[])[0].role;
-        const token = generateAuthToken(email, role);
+        const rol_usuario = (result as RowDataPacket[])[0].rol_usuario;
+        const token = generateAuthToken(email, rol_usuario);
         console.log("inicio de sesion se llevo a cabo satisfactoriamente.");
         return res.status(200).json({ token });
       } else {
@@ -118,12 +128,12 @@ export const validateToken = (req: Request, res: Response) => {
   const readedToken = req.header("x-auth-token")!;
 
   // token validation
-  const { email, role } = verifyToken(readedToken) as VerifiedTokenType;
+  const { email, rol_usuario } = verifyToken(readedToken) as VerifiedTokenType;
 
-  // check if email exists in the database with the role
+  // check if email exists in the database with the rol_usuario
   const loginQuery: string = constants.SQL_QUERIES.AUTH.TOKEN_VALIDATION;
 
-  mysqlPool.query(loginQuery, [email, role], (err, result, fields) => {
+  mysqlPool.query(loginQuery, [email, rol_usuario], (err, result, fields) => {
     if (err) {
       console.error(err?.message);
       res.status(404).json({
@@ -132,12 +142,12 @@ export const validateToken = (req: Request, res: Response) => {
       });
       throw err;
     } else {
-      const { name, second_name, email } = (result as RowDataPacket[])[0];
+      const { nombre, apellidos, email } = (result as RowDataPacket[])[0];
       // we can set as valid this proccess
       return res.status(200).json({
         data: {
-          name,
-          second_name,
+          nombre,
+          apellidos,
           email,
         },
         status: true,
@@ -151,11 +161,11 @@ export const regenerateToken = (req: Request, res: Response) => {
   // extract token
   const readedToken = req.header("x-auth-token")!;
 
-  // extract email and role from token
-  const { email, role } = verifyToken(readedToken) as VerifiedTokenType;
+  // extract email and rol_usuario from token
+  const { email, rol_usuario } = verifyToken(readedToken) as VerifiedTokenType;
 
   // generate new token with old one's information
-  const newGeneratedToken = generateAuthToken(email, role);
+  const newGeneratedToken = generateAuthToken(email, rol_usuario);
 
   // return new generated token
   return res.status(200).json({ token: newGeneratedToken });
