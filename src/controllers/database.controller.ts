@@ -57,22 +57,78 @@ export const createTables = (req: Request, res: Response) => {
 };
 
 export const insertIntoTables = (req: Request, res: Response) => {
-    try {
+  try {
+    const createTablesQueries = fs.readFileSync(
+      path.join(__dirname, `../db/Tables.sql`),
+      "utf-8"
+    );
+
     const readedQueries = fs.readFileSync(
       path.join(__dirname, `../db/Data_mockups.sql`),
       "utf-8"
     );
 
-    mysqlPool.query(readedQueries, (err, results) => {
-      if (err) throw err;
+    // Compatibilidad con motores que no soportan "ADD COLUMN IF NOT EXISTS".
+    const legacyAlterQueries: string[] = [
+      `ALTER TABLE Inventario ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
+      `ALTER TABLE Ingredientes ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0;`,
+      `ALTER TABLE Ingredientes ADD COLUMN unidad ENUM('kg', 'litros', 'unidad', 'metros', 'gramos') NOT NULL DEFAULT 'unidad';`,
+      `ALTER TABLE Ingredientes ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
+    ];
 
-      if (results) {
-        res.status(200).json({ mssg: "Datos insertados en las tablas sin errores." });
-      } else {
-        res
+    const runMockupInsert = () => {
+      mysqlPool.query(readedQueries, (insertErr, results) => {
+        if (insertErr) {
+          console.error(insertErr?.message);
+          return res.status(500).json({
+            mssg: "Error al insertar datos mock en las tablas.",
+            error: insertErr.message,
+          });
+        }
+
+        if (results) {
+          return res.status(200).json({ mssg: "Datos mock insertados correctamente." });
+        }
+
+        return res
           .status(404)
           .json({ mssg: "Ha habido un problema con la insercion en las tablas." });
+      });
+    };
+
+    const runLegacySchemaFixes = (index: number) => {
+      if (index >= legacyAlterQueries.length) {
+        return runMockupInsert();
       }
+
+      mysqlPool.query(legacyAlterQueries[index], (alterErr) => {
+        if (alterErr) {
+          const errorCode = (alterErr as any)?.code;
+          const isDuplicateColumn = errorCode === "ER_DUP_FIELDNAME";
+
+          if (!isDuplicateColumn) {
+            console.error(alterErr?.message);
+            return res.status(500).json({
+              mssg: "Error al preparar estructura legacy para mockups.",
+              error: alterErr.message,
+            });
+          }
+        }
+
+        return runLegacySchemaFixes(index + 1);
+      });
+    };
+
+    mysqlPool.query(createTablesQueries, (createErr) => {
+      if (createErr) {
+        console.error(createErr?.message);
+        return res.status(500).json({
+          mssg: "Error al crear la estructura base de tablas.",
+          error: createErr.message,
+        });
+      }
+
+      return runLegacySchemaFixes(0);
     });
   } catch (error) {
     console.log(error);
