@@ -1,18 +1,13 @@
 # Define image and version
-FROM node:20
+FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim
+
  
-# Clear npm cache before installing any dependency
-RUN npm cache clean --force \
-  && npm config set fund false \
+# Configure npm retries/timeouts to make container builds more resilient
+RUN npm config set fund false \
   && npm config set audit false \
   && npm config set fetch-retries 5 \
   && npm config set fetch-retry-mintimeout 20000 \
   && npm config set fetch-retry-maxtimeout 120000
-
-# Remove any existing lockfile and node_modules to avoid issues
-RUN rm -rf /root/.npm /root/.npm/_logs /root/.npm/_cache
-
-RUN npm install -g nodemon 
 
 RUN mkdir -p /home/app
 
@@ -21,10 +16,7 @@ WORKDIR /home/app
 # We need to copy our package.json inside the current folder
 COPY package*.json /home/app/
 
-# Run the command to install our package.json dependencies
-# RUN npm install
-
-# Install dependencies using npm ci (better for Docker)
+# Install dependencies using npm ci for reproducible builds
 RUN npm ci --prefer-online
 
 # Copy all of the content inside the container's folder

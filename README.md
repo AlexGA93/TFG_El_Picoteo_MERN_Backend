@@ -1,5 +1,34 @@
 # Docker Commands
 
+## Current Project Docker Setup (March 2026)
+
+This is the current setup used by this repository:
+
+- Development app image (`Dockerfile.dev`)
+  - `FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim`
+  - Goal: keep Node aligned with local runtime and reduce base-image vulnerabilities versus generic tags.
+- Development database image (`docker-compose-dev.yml`)
+  - `image: mirror.gcr.io/library/mysql:8.0.45`
+  - Goal: pin exact MySQL patch version and use the registry mirror for faster/more reliable pulls.
+
+Current development structure:
+
+- `Dockerfile.dev`: backend development image (`npm run dev`)
+- `docker-compose-dev.yml`: `server` + `mysqldb` services with mounted source code and named volumes
+- `server-node-modules` volume: isolates container dependencies from host
+- `mysql-data` volume: persists MySQL data between restarts
+
+Important notes:
+
+- Avoid floating tags like `node:20`, `node:22`, or `mysql:8.0` in development because they can change unexpectedly.
+- After changing image tags, rebuild with fresh layers:
+  ```
+  docker compose -f docker-compose-dev.yml build --pull --no-cache
+  ```
+- If Docker DX reports vulnerabilities, confirm they belong to:
+  - OS packages in base image, or
+  - npm dependencies installed in the project.
+
 ## 1. Docker Images Commands
 
 - Docker images list
@@ -166,7 +195,7 @@ docker compose down
 
 - Use dockerfile for development environment
 ```
-docker compose -f docker-compose-dev.yml up
+docker compose -f docker-compose-dev.yml up --build
 ```
 
 ## 8. Actions & Commands 
@@ -356,24 +385,28 @@ Segun pone en este proyecto, no parece que sea necesario el estar referenciando 
 
 
 
-Actualizacion de docker
+### Docker Troubleshooting (Known Issues)
 
-sudo systemctl status docker
+- MySQL error: `Invalid MySQL server downgrade: Cannot downgrade from 90600 to 80045`
+  - Cause: existing `mysql-data` volume was created by a newer major MySQL version.
+  - Dev fix (destructive for local DB data):
+    ```
+    docker compose -f docker-compose-dev.yml down -v
+    docker compose -f docker-compose-dev.yml up --build
+    ```
+  - Safe path if data must be preserved:
+    1. Start temporary container with source version (the newer one).
+    2. Create `mysqldump`.
+    3. Restore into MySQL `8.0.45`.
 
-pacman -S docker
-pacman -S docker-compose
-docker-compose --version
-
-docker-compose -f docker-compose-dev.yml down
-docker-compose -f docker-compose-dev.yml up --force-recreate
-
-sudo systemctl restart docker
+- Pull source in logs: `mirror.gcr.io/library/mysql:...`
+  - This is expected and configured intentionally as a Docker Hub mirror.
 
 ### Backup de DDBB previo cambios
 
 - Ver servicios de compose
 ```
-docker-compose ps
+docker compose ps
 ```
 - Ver contenedores en ejecucion
 ```
@@ -389,7 +422,7 @@ ee59fd3c89c2   mysql                                "docker-entrypoint.s…"   9
 ```
 - Hacemos volcado del backup
 ```
-docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 sh -c 'exec mysqldump -u root -p"123456" ElPicoteo' > src/db/backups/backup-$(date +%F).sql
+docker compose exec -T mysqldb sh -c 'exec mysqldump -u root -p"123456" ElPicoteo' > src/db/backups/backup-$(date +%F).sql
 ```
 
 - Tras hacer el backup vamos a actualizar nuestro entorno.
@@ -400,19 +433,19 @@ Usaremos un metodo no destructivo, aplicando solo os cambios sin borrar nada
 echo "ALTER TABLE Ingredientes 
 ADD COLUMN IF NOT EXISTS cantidades FLOAT NOT NULL DEFAULT 0, 
 ADD COLUMN IF NOT EXISTS unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
-| docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo`
+| docker compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo
 ```
 
 dentro de la terminal ejecutamos:
 ```
-cat src/db/Data_mockups.sql | docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo
+cat src/db/Data_mockups.sql | docker compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo
 ```
 Y para verificar que los cambios se han aplicado:
 ```
-docker-compose exec -T mysqldb mysql -u root -p"123456" -e "DESCRIBE Ingredientes;" ElPicoteo
+docker compose exec -T mysqldb mysql -u root -p"123456" -e "DESCRIBE Ingredientes;" ElPicoteo
 ```
 
 cd /home/elros/Documents/Programming/TFG/TFG_El_Picoteo_MERN_Backend && echo "ALTER TABLE Ingredientes 
 ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0, 
 ADD COLUMN unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
-| docker-compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo
+| docker compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo

@@ -40,17 +40,18 @@ INSERT INTO Inventario (id, nombre, tipo, unidades, n_unidades, proveedor, preci
 -- ====================================
 -- Datos para la tabla Stock
 -- ====================================
-INSERT INTO Stock (id, nombre_producto, precio_producto) VALUES
-(1, 'Pan casero', 1.50),
-(2, 'Bizcocho de vainilla', 8.00),
-(3, 'Tarta de chocolate', 15.00),
-(4, 'Empanada de pollo', 3.50),
-(5, 'Ensalada mixta', 5.50),
-(6, 'Smoothie de manzana', 3.00),
-(7, 'Pizza margarita', 9.00),
-(8, 'Croquetas', 6.00),
-(9, 'Sandwich vegetal', 4.50),
-(10, 'Tarta de queso', 14.00);
+INSERT INTO Stock (id, nombre_producto, precio_producto, tiempo_produccion_min, dificultad) VALUES
+(1, 'Pan casero', 1.50, 45, 'facil'),
+(2, 'Bizcocho de vainilla', 8.00, 60, 'media'),
+(3, 'Tarta de chocolate', 15.00, 90, 'dificil'),
+(4, 'Empanada de pollo', 3.50, 50, 'media'),
+(5, 'Ensalada mixta', 5.50, 15, 'facil'),
+(6, 'Smoothie de manzana', 3.00, 10, 'facil'),
+(7, 'Pizza margarita', 9.00, 75, 'media'),
+(8, 'Croquetas', 6.00, 55, 'dificil'),
+(9, 'Sandwich vegetal', 4.50, 20, 'facil'),
+(10, 'Tarta de queso', 14.00, 120, 'dificil');
+
 
 -- ====================================
 -- Datos para la tabla Ingredientes

@@ -45,6 +45,7 @@ export const create = (req: Request, res: Response) => {
 }
 
 export const update = (req: Request, res: Response) => {
+    const { id } = req.params;
     const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
     const query: string = constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT;
     mysqlPool.query(query, [tipo, unidades, n_unidades, proveedor, precio_unidad, nombre], (err, result, fields) => {
@@ -58,9 +59,9 @@ export const update = (req: Request, res: Response) => {
 };
 
 export const remove = (req: Request, res: Response) => {
-    const { nombre } = req.params;
+    const { id } = req.params;
     const query: string = constants.SQL_QUERIES.DATABASE.DELETE_INVENTORY_PRODUCT;
-    mysqlPool.query(query, [nombre], (err, result, fields) => {
+    mysqlPool.query(query, [id], (err, result, fields) => {
         if (err) {
             console.error(err?.message);
             res.status(500).json({ mssg: "Error al eliminar el producto del inventario" });

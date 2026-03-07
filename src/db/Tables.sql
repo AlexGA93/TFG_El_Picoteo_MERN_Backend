@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS Stock (
   id INT NOT NULL AUTO_INCREMENT,
   nombre_producto VARCHAR(255) NOT NULL,
   precio_producto FLOAT NOT NULL,
-  
+  tiempo_produccion_min INT NOT NULL, -- antes era string "45 min" en mock
+  dificultad ENUM('facil','media','dificil') NOT NULL,
   PRIMARY KEY (id)
 );
 

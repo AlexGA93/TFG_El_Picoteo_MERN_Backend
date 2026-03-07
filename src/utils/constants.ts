@@ -18,23 +18,30 @@ export const constants = {
             INVENTARIO: {
                 GET_ALL: `SELECT * FROM Inventario;`,
                 GET_BY_ID: `SELECT * FROM Inventario WHERE id=?;`,
-                INSERT_PRODUCT: `INSERT INTO Inventario(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad) VALUES (?, ?, ?, ?, ?, ?);`,
+                INSERT_PRODUCT: `INSERT INTO Inventario(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, NOW());`,
                 UPDATE_PRODUCT: `UPDATE Inventario SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
-                DELETE_PRODUCT: `DELETE FROM Inventario WHERE nombre=?;`  
+                DELETE_PRODUCT: `DELETE FROM Inventario WHERE id=?;`  
             },
             STOCK: {
                 GET_ALL: `SELECT * FROM Stock;`,
                 GET_BY_ID: `SELECT * FROM Stock WHERE id=?;`,
-                INSERT_STOCK_PRODUCT: `INSERT INTO Stock(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad) VALUES (?, ?, ?, ?, ?, ?);`,
-                UPDATE_STOCK_PRODUCT: `UPDATE Stock SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
-                DELETE_STOCK_PRODUCT: `DELETE FROM Stock WHERE nombre=?;`
+                INSERT_STOCK_PRODUCT: `INSERT INTO Stock(nombre_producto, precio_producto, tiempo_produccion_min, dificultad) VALUES (?, ?, ?, ?);`,
+                UPDATE_STOCK_PRODUCT: `UPDATE Stock SET nombre_producto=?, precio_producto=?, tiempo_produccion_min=?, dificultad=? WHERE id=?;`,
+                DELETE_STOCK_PRODUCT: `DELETE FROM Stock WHERE id=?;`
             },
             INGREDIENTES: {
                 GET_ALL: `SELECT * FROM Ingredientes;`,
                 GET_BY_ID: `SELECT * FROM Ingredientes WHERE id=?;`,
-                INSERT_INGREDIENT: `INSERT INTO Ingredientes(nombre, cantidad, unidad_medida) VALUES (?, ?, ?);`,
-                UPDATE_INGREDIENT: `UPDATE Ingredientes SET cantidad=?, unidad_medida=? WHERE nombre=?;`,
-                DELETE_INGREDIENT: `DELETE FROM Ingredientes WHERE nombre=?;`
+                INSERT_INGREDIENT: `INSERT INTO Ingredientes(id_producto_stock, id_inventario, cantidades, unidad, fecha_registro) VALUES (?, ?, ?, ?, NOW());`,
+                UPDATE_INGREDIENT: `UPDATE Ingredientes SET id_producto_stock=?, id_inventario=?, cantidades=?, unidad=? WHERE id=?;`,
+                DELETE_INGREDIENT: `DELETE FROM Ingredientes WHERE id=?;`
+            },
+            PAGOS: {
+                GET_ALL: `SELECT * FROM Pagos;`,
+                GET_BY_ID: `SELECT * FROM Pagos WHERE id=?;`,
+                INSERT_PAYMENT: `INSERT INTO Pagos(id_stock, fecha_pago) VALUES (?, NOW());`,
+                UPDATE_PAYMENT: `UPDATE Pagos SET id_stock=? WHERE id=?;`,
+                DELETE_PAYMENT: `DELETE FROM Pagos WHERE id=?;`
             },
             GET_GLOBAL_TABLES: `SHOW TABLES;`,
             GET_ALL_DATABASES: `SHOW DATABASES;`,
@@ -51,11 +58,11 @@ export const constants = {
                 return `SELECT * FROM ${tableName};`;
             },
             // INSERT DATA
-            INSERT_INVENTORY_PRODUCT: `INSERT INTO Inventario(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad) VALUES (?, ?, ?, ?, ?, ?);`,
+            INSERT_INVENTORY_PRODUCT: `INSERT INTO Inventario(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, NOW());`,
             // UPDATE DATA
-            UPDATE_INVENTORY_PRODUCT: `UPDATE Inventario SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
+            UPDATE_INVENTORY_PRODUCT: `UPDATE Inventario SET nombre=?, tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE id=?;`,
             // DELETE DATA
-            DELETE_INVENTORY_PRODUCT: `DELETE FROM Inventario WHERE nombre=?;`
+            DELETE_INVENTORY_PRODUCT: `DELETE FROM Inventario WHERE id=?;`
 
         }
     }

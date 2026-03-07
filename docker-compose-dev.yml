@@ -8,17 +8,17 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-    links:
-      - mysqldb
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     volumes:
       - .:/home/app
+      - server-node-modules:/home/app/node_modules
 
   # MySQL container named as 'mysqldb'
   mysqldb:
     # MySQL image
-    image: mysql
+    image: mirror.gcr.io/library/mysql:8.0.45
     # environment variables from .env file
     env_file:
       - ./.env
@@ -30,6 +30,12 @@ services:
     # ports - pc_port:internal_docker_port
     ports:
       - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     volumes:
       - mysql-data:/var/lib/mysql
 networks:
@@ -37,7 +43,8 @@ networks:
     driver: bridge
 
 volumes:
-  mysql-data: 
+  mysql-data:
+  server-node-modules:
 
 # sudo systemctl start docker
 # docker-compose -f docker-compose-dev.yml up

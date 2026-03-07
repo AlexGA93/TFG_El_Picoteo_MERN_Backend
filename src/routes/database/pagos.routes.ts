@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as pagosController from "../../controllers/inventario/inventario.controller";
+import * as pagosController from "../../controllers/pagos/pagos.controller";
 
 const router = Router();
 

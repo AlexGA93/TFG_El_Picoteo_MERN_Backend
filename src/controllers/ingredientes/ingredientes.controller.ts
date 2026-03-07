@@ -30,10 +30,10 @@ export const getById = (req: Request, res: Response) => {
 }
 
 export const create = (req: Request, res: Response) => {
-    const { nombre, cantidad, unidad_medida } = req.body;
+    const { id_producto_stock, id_inventario, cantidades, unidad } = req.body;
     const query = constants.SQL_QUERIES.DATABASE.INGREDIENTES.INSERT_INGREDIENT;
     
-    mysqlPool.query(query, [nombre, cantidad, unidad_medida], (err, result, fields) => {
+    mysqlPool.query(query, [id_producto_stock, id_inventario, cantidades, unidad], (err, result, fields) => {
         if (err) {
             console.error(err?.message);
             res.status(500).json({ mssg: "Error al crear el ingrediente" });
@@ -45,10 +45,10 @@ export const create = (req: Request, res: Response) => {
 
 export const update = (req: Request, res: Response) => {
     const { id } = req.params;
-    const { cantidad, unidad_medida } = req.body;
+    const { id_producto_stock, id_inventario, cantidades, unidad } = req.body;
     const query = constants.SQL_QUERIES.DATABASE.INGREDIENTES.UPDATE_INGREDIENT;
     
-    mysqlPool.query(query, [cantidad, unidad_medida, id], (err, result, fields) => {
+    mysqlPool.query(query, [id_producto_stock, id_inventario, cantidades, unidad, id], (err, result, fields) => {
         if (err) {
             console.error(err?.message);
             res.status(500).json({ mssg: "Error al actualizar el ingrediente" });
