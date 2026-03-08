@@ -1,5 +1,5 @@
 import app from "./app";
-import { ensureDatabaseAndTables } from "./db/init";
+import { ensureDatabaseAndTables } from "./core/db/init";
 
 const PORT: string | number = process.env.NODE_DOCKER_PORT! || 5000;
 
