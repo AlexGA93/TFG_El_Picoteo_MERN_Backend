@@ -1,418 +1,273 @@
-# Docker Commands
+# Documentacion Backend - El Picoteo
 
-## 1. Docker Images Commands
+## 1) Docker y Comandos a Usar
 
-- Docker images list
-    ```
-    docker images
-    ```
-- Docker download a single images
-    ```
-    docker pull image_name
+### Requisitos
+- Docker + Docker Compose plugin.
+- Puerto API por defecto: `5000`.
+- MySQL segun `docker-compose-dev.yml`.
 
-    or
-
-    docker pull image_name:version_number
-    ```
-- Delete Docker Image
-    ```
-    docker image rm image_name
-
-    or
-
-    docker rmi $(docker images -q)
-    ```
-
-## 2. Docker Image's Containers
-
-- Create a container by image (It returns container's ID)
-    ```
-    docker container create image_name
-    
-    or
-
-    docker create image_name
-
-    or
-
-    docker create --name container_name image_name
-
-    or
-
-    docker create -pmachine_port:contianer_port --name container_name image_name
-    ```
-- Start Container
-    ```
-    docker start container_ID
-    ```
-- Stop Container
-    ```
-    docker stop container_ID
-    ```
-- List of the containers
-    ```
-    docker ps
-
-    or
-
-    docker ps -a
-    ```
-- Delete container
-    ```
-    docker rm container_name
-
-    or
-
-    docker rm container_ID
-
-    or 
-
-    docker rm $(docker ps -aq) -f 
-    ```
-- Logs
-    ```
-    docker logs container_name
-
-    or
-
-    docker logs --follow container_name
-    ```
-## 3. Run Docker Command "docker run"
-
-It will make three steps:
-
-- Check for downloaded images (If it doesn't find any, it will download them).
-- Create a container
-- Init container
-    ```
-    docker run image_name
-
-    or
-
-    docker run -d image_name
-
-    or
-
-    docker run -pmachine_port:container_port --name container_name -d image_name
-    ```
-### 3.1 Access to the docker container
-```
-docker exec -it docker_container_name bash -l
+### Arranque en desarrollo (recomendado)
+```bash
+docker compose -f docker-compose-dev.yml up --build
 ```
 
-- Internal MySQL commands
+### Parar entorno
+```bash
+docker compose -f docker-compose-dev.yml down
 ```
+
+### Reconstruir imagenes (sin cache)
+```bash
+docker compose -f docker-compose-dev.yml build --pull --no-cache
+```
+
+### Logs
+```bash
+docker compose -f docker-compose-dev.yml logs -f
+```
+
+### Entrar al contenedor backend
+```bash
+docker exec -it <nombre_contenedor_backend> bash -l
+```
+
+### Entrar a MySQL dentro del contenedor
+```bash
 mysql --user="root" --password="123456"
 ```
 
-## 4. Network
-
-- List networks
-    ```
-    docker network ls
-    ```
-
-- Create a newtwork
-    ```
-    docker network create network_name
-    ```
-- Delete a newtwork
-    ```
-    docker network rm network_name
-    ```
-## 5. Create Docker Images by Dockerfile
-
-```
-docker build -t image_name:version route
-```
-- example:
-```
-docker build -t myserver:latest .
+### Comandos Docker utiles
+```bash
+docker images
+docker ps -a
+docker logs -f <container>
+docker rm -f <container>
+docker network ls
 ```
 
-## 6. Create two containers and enable communication between them
-- Create a network to operate with.
+### Comando de chequeo TypeScript
+```bash
+npx tsc --noEmit
 ```
-docker network create my_network
-```
-- Create App image using Dockerfile
-```
-docker build -t myserver:latest .
-```
-
-- Create database container (example mongoDB)
-```
-docker create -p 27017:27017 --name mongo_container --network my_network -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password mongo
-```
-
-- Create app container
-```
-docker create -p 3000:3000 --name my_app_container --network my_network myserver:latest
-```
-- Check logs
-```
-docker logs my_app_container
-```
-## 7. Automation with Docker Compose
-
-- Init our setup
-```
-docker compose up
-```
-- Delete containers and newtorks
-```
-docker compose down
-```
-
-- Use dockerfile for development environment
-```
-docker compose -f docker-compose-dev.yml up
-```
-
-## 8. Actions & Commands 
-
-### Preparing Environment
-First of all we must connect to our docker-build database using the steps written in the point [3 of this documentation](#31-access-to-the-docker-container). When we are able to connect to the MySQL environment we can insert any query we need.
-
-The first couple of commands that we'll need are:
-- Show all the databases
-    ```
-    SHOW DATABASES;
-    ```
-
-- Access to the correct database
-    ```
-    USE ElPicoteo;
-    ```
-
-- Show all the tables that our database contains
-    ```
-    SHOW TABLES;
-    ```
-
-**NOTICE:** If there is no tables inside, we need to create a users table to be able to register our employees and admins.
-
-- Create manually a table
-    ```
-    CREATE TABLE IF NOT EXISTS Usuarios(id INT NOT NULL AUTO_INCREMENT,name VARCHAR(100),second_name VARCHAR(100),email VARCHAR(100),password VARCHAR(255),rol_usuario VARCHAR(100),PRIMARY KEY(id));
-    ```
-- Show a table's content
-    ```
-    Select * FROM usuarios;
-    ```
-
-### Backend Endpoints
-Once we have a proper built environment we must register a new user. In this case we're going to register two new users to test our endpoint:
-
-- Register endpoint (/api/auth/register)
-    - We'll ingress the folowing credentials:
-    John Doe:
-    ```
-    {
-        "name":"John",
-        "second_name": "Doe",
-        "email":"johnDoe@elpicoteo.com",
-        "password":"92johnDOE4ever",
-        "rol_usuario":"admin"
-    }
-    ```
-    Jane Doe:
-    ```
-    {
-        "name":"Jane",
-        "second_name": "Doe",
-        "email":"janeDoe@elpicoteo.com",
-        "password":"92johnDOE4ever",
-        "rol_usuario":"employee"
-    }
-    ```
-
-    Every registration process will generate a JWT ([JSON Web Token](https://jwt.io/)). This token will contain the user's information that developer thought they will be neccessaries to the app's correct functionallity.
-
-    In this case we'll take a generated JWT of the previous proccess to show how it works:
-
-    ```
-    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImphbmVEb2VAZWxwaWNvdGVvLmNvbSIsInJvbGUiOiJlbXBsb3llZSIsImlhdCI6MTY5NTg5MDE2MiwiZXhwIjoxNjk1ODk3MzYyfQ.QyBIQKzLuTajPUyMkFllKy0egaS9EGfh-TUh1JTUdW4
-    ``` 
-    We can see some information if we decode this token:
-
-    - Header (ALGORITHM & TOKEN TYPE) 
-    ```
-    {
-        "alg": "HS256",
-        "typ": "JWT"
-    }
-    ```
-    - PAYLOAD (DATA)
-    ```
-    {
-        "email": "janeDoe@elpicoteo.com",
-        "rol_usuario": "employee",
-        "iat": 1695890162,
-        "exp": 1695897362
-    }
-    ```
-    - VERIFY SIGNATURE
-    ```
-    HMACSHA256(
-        base64UrlEncode(header) + "." +
-        base64UrlEncode(payload), 
-    )
-    ```
-    **NOTICE: ** All this information can be tested in the official site previously provided.
-
-- Login (/api/auth/login)
-    - We'll ingress the folowing credentials: Generating a new JWT.
-    ```
-    {
-        "email":"janeDoe@elpicoteo.com",
-        "password":"92johnDOE4ever"
-    }
-    ```
-    
-At this point we have a previously created table to store any user that our project needs and we've registered two users with different rol_usuarios and we tested that we can login with their credentials. Next step is check if we can get their data or update them (We need to be cautelous with the user's rol_usuario). 
-
-- 
-
-
-docker compose -f docker-compose.yml up
-
-docker exec -it docker_container_name -l
-
-docker compose down
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ---
 
-### ENDPOINTS
+## 2) Estructura Segun MVC (General)
+
+La arquitectura actual sigue MVC para API REST con separacion por modulos.
+
+### Flujo general
+`route -> controller -> service -> model -> view`
+
+### Explicacion MVC en este backend
+- `Model`: capa de acceso a datos. Aqui viven las queries SQL y la comunicacion con MySQL.
+- `View`: capa de presentacion de salida. En este proyecto no renderiza HTML; transforma/estandariza respuestas JSON.
+- `Controller`: capa HTTP. Recibe request, valida flujo, llama servicios y devuelve respuesta.
+- `Service` (capa intermedia): orquesta reglas de negocio entre controller y model. En este proyecto se usa para mantener controladores delgados.
+- `Route`: puerta de entrada HTTP. Declara endpoints y aplica middlewares (auth, validaciones).
+
+En practica, cada modulo sigue este ciclo:
+1. La request entra por `routes`.
+2. El `controller` interpreta parametros/body.
+3. El `service` ejecuta logica de negocio.
+4. El `model` consulta/actualiza base de datos.
+5. La `view` devuelve un JSON estandar al cliente.
+
+### Esquema MVC
+```txt
+Cliente HTTP
+   |
+   v
+Route (Express)
+   |
+   v
+Controller (HTTP)
+   |
+   v
+Service (negocio)
+   |
+   v
+Model (SQL / MySQL)
+   |
+   v
+View (respuesta JSON)
+   |
+   v
+Cliente HTTP
 ```
 
-Endpoints
-========
+### Esquema de carpetas MVC
+```txt
+src/
+  core/                           # componentes compartidos
+    auth/                         # JWT y autorizacion por roles
+    db/                           # conexion y bootstrap de DB
+    middleware/                   # validate-jwt, error-handler
+    routes/                       # agregador global de rutas
+    security/                     # hashing y utilidades de seguridad
+    types/                        # tipos globales
+    utils/                        # async-handler, http-error, constantes
+    views/                        # respuesta API estandar
 
-/api/databases
-- /                                                                                            - get all databases
-- /:database_name/tables/                                                                      - get all database tables
-- /:database_name/tables/:table_name                                                           - get table content
-
-Endpoints for admin's use
---------------------------------------------------------------------------------------------------------------------------------------
-- /:database_name/tables/                                                                      - post database new element(s) IF NOT EXISTS
-- /:database_name/tables/:table_name                                                           - put /patch database element(s) IF EXISTS
-- /:database_name/tables/:table_name                                                           - delete  database new element(s) IF EXISTS
---------------------------------------------------------------------------------------------------------------------------------------
-
-FILTER DATABASE TABLES CONTENT
-- /:database_name/tables/:table_name/filter
-
-
-
-
+  modules/
+    <modulo>/                     # auth, users, inventario, etc.
+      *.routes.ts                 # Route
+      *.controller.ts             # Controller
+      *.service.ts                # Service
+      *.model.ts                  # Model
+      *.view.ts (si aplica)       # View especifica del modulo
 ```
 
-//TODO: HACER COMPROBACION DE CREACION DE BASE DE DATOS
-/*
-aL INICIAR COMPROBARA SI EXISTE LA BASE DE DATOS
-aL MOMENTO DE CREAR LA BASE DE DATOS CREARA LA ESTRUCTURA DE TABLAS INTERNA
-mirar como
-https://github.com/UskoKruM/restapi-nodejs-express-mysql/blob/master/src/control_usuariolers/language.control_usuarioler.js
-Segun pone en este proyecto, no parece que sea necesario el estar referenciando el acceso continuo a la base de datos.. .se nombra y ya
-*/
+### Estructura principal
+```txt
+src/
+  app.ts
+  index.ts
 
+  core/
+    auth/
+    db/
+    middleware/
+    routes/
+    security/
+    types/
+    utils/
+    views/
 
-
-
-
-Actualizacion de docker
-
-sudo systemctl status docker
-
-pacman -S docker
-pacman -S docker-compose
-docker-compose --version
-
-docker-compose -f docker-compose-dev.yml down
-docker-compose -f docker-compose-dev.yml up --force-recreate
-
-sudo systemctl restart docker
-
-### Backup de DDBB previo cambios
-
-- Ver servicios de compose
-```
-docker-compose ps
-```
-- Ver contenedores en ejecucion
-```
-docker ps
-```
-- Busca el servicio (ej. mysqldb) o el contenedor (ej. tfg_el_picoteo_mern_backend-mysqldb-1).
-```
-CONTAINER ID   IMAGE                                COMMAND                  CREATED         STATUS         PORTS                                                    NAMES
-9201666ed940   tfg_el_picoteo_mern_backend-server   "docker-entrypoint.s…"   9 minutes ago   Up 9 minutes   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp              tfg_el_picoteo_mern_backend-server-1
-ee59fd3c89c2   mysql                                "docker-entrypoint.s…"   9 minutes ago   Up 9 minutes   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp, 33060/tcp   tfg_el_picoteo_mern_backend-mysqldb-1
-
- 
-```
-- Hacemos volcado del backup
-```
-docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 sh -c 'exec mysqldump -u root -p"123456" ElPicoteo' > src/db/backups/backup-$(date +%F).sql
+  modules/
+    auth/
+    users/
+    database/
+    dashboard/
+    inventario/
+    stock/
+    ingredientes/
+    pagos/
 ```
 
-- Tras hacer el backup vamos a actualizar nuestro entorno.
+### Rol de cada capa
+- `routes`: define endpoints y middlewares por ruta.
+- `controllers`: capa HTTP (request/response), sin SQL directo.
+- `services`: logica de negocio/orquestacion.
+- `models`: acceso a datos (queries SQL).
+- `views`: formato de salida de API (respuesta estandar).
+- `core`: piezas transversales compartidas (auth, db, middleware, utilidades, tipos).
 
+---
 
-Usaremos un metodo no destructivo, aplicando solo os cambios sin borrar nada
-```
-echo "ALTER TABLE Ingredientes 
-ADD COLUMN IF NOT EXISTS cantidades FLOAT NOT NULL DEFAULT 0, 
-ADD COLUMN IF NOT EXISTS unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
-| docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo`
+## 3) Endpoints y Respuestas
+
+### Base URL
+- Local: `http://localhost:5000`
+
+### Header de autenticacion
+- Para rutas protegidas: `x-auth-token: <jwt>`
+
+### Formato estandar de respuesta
+
+#### Exito
+```json
+{
+  "success": true,
+  "message": "texto",
+  "data": {}
+}
 ```
 
-dentro de la terminal ejecutamos:
-```
-cat src/db/Data_mockups.sql | docker-compose exec -T tfg_el_picoteo_mern_backend-mysqldb-1 mysql -u root -p"123456" ElPicoteo
-```
-Y para verificar que los cambios se han aplicado:
-```
-docker-compose exec -T mysqldb mysql -u root -p"123456" -e "DESCRIBE Ingredientes;" ElPicoteo
+#### Error
+```json
+{
+  "success": false,
+  "message": "texto",
+  "error": null
+}
 ```
 
-cd /home/elros/Documents/Programming/TFG/TFG_El_Picoteo_MERN_Backend && echo "ALTER TABLE Ingredientes 
-ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0, 
-ADD COLUMN unidad ENUM('kg','litros','unidad','metros','gramos') NOT NULL DEFAULT 'unidad';" \
-| docker-compose exec -T mysqldb mysql -u root -p"123456" ElPicoteo
+### Endpoints
+
+#### Health
+- `GET /`
+
+#### Auth (`/api/auth`)
+- `POST /register`
+- `POST /login`
+- `GET /renew` (protegido)
+- `GET /validate` (protegido)
+
+#### Users (`/api/users`)
+- `GET /` (admin)
+- `GET /:id` (admin o employee)
+- `PUT /:id` (admin)
+- `DELETE /:id` (admin)
+
+#### Database y dashboard (`/api/databases`)
+- `GET /` (admin)
+- `GET /create-tables` (admin)
+- `GET /mockup-insertion` (admin)
+- `GET /dashboard` (admin o employee)
+- `GET /tables` (admin o employee)
+- `GET /tables/:table_name` (admin o employee)
+
+#### CRUD Inventario (`/api/databases/inventario`)
+- `GET /`
+- `GET /:id`
+- `POST /`
+- `PUT /:id`
+- `DELETE /:id`
+
+#### CRUD Stock (`/api/databases/stock`)
+- `GET /`
+- `GET /:id`
+- `POST /`
+- `PUT /:id`
+- `DELETE /:id`
+
+#### CRUD Ingredientes (`/api/databases/ingredientes`)
+- `GET /`
+- `GET /:id`
+- `POST /`
+- `PUT /:id`
+- `DELETE /:id`
+
+#### CRUD Pagos (`/api/databases/pagos`)
+- `GET /`
+- `GET /:id`
+- `POST /`
+- `PUT /:id`
+- `DELETE /:id`
+
+### Ejemplos rapidos
+
+#### Login
+`POST /api/auth/login`
+```json
+{
+  "email": "admin@elpicoteo.com",
+  "password": "Password123"
+}
+```
+
+#### Respuesta login (exito)
+```json
+{
+  "success": true,
+  "message": "Inicio de sesion correcto",
+  "data": {
+    "token": "<jwt>"
+  }
+}
+```
+
+#### Error de validacion
+```json
+{
+  "success": false,
+  "message": "Errores de validacion",
+  "error": [
+    {
+      "msg": "Email must have a valid format"
+    }
+  ]
+}
+```

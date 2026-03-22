@@ -1,0 +1,79 @@
+import { ResultSetHeader, RowDataPacket } from "mysql2";
+import mysqlPool from "../../core/db/db";
+import { constants } from "../../core/utils/constants";
+
+type QueryParams = Array<string | number | boolean | Date | null>;
+
+const queryAsync = <T = RowDataPacket[]>(
+  sql: string,
+  params: QueryParams = []
+): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(sql, params, (err, result) => {
+      if (err) return reject(err);
+      resolve(result as T);
+    });
+  });
+};
+
+export const getAllInventario = () => {
+  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_ALL);
+};
+
+export const getInventarioById = async (id: string) => {
+  const result = await queryAsync<RowDataPacket[]>(
+    constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_BY_ID,
+    [id]
+  );
+  return result[0] ?? null;
+};
+
+export const createInventario = (payload: {
+  nombre: string;
+  tipo: string;
+  unidades: string;
+  n_unidades: number;
+  proveedor: string;
+  precio_unidad: number;
+}) => {
+  return queryAsync<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.INSERT_INVENTORY_PRODUCT,
+    [
+      payload.nombre,
+      payload.tipo,
+      payload.unidades,
+      payload.n_unidades,
+      payload.proveedor,
+      payload.precio_unidad,
+    ]
+  );
+};
+
+export const updateInventario = (payload: {
+  id: string;
+  nombre: string;
+  tipo: string;
+  unidades: string;
+  n_unidades: number;
+  proveedor: string;
+  precio_unidad: number;
+}) => {
+  return queryAsync<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
+    [
+      payload.tipo,
+      payload.unidades,
+      payload.n_unidades,
+      payload.proveedor,
+      payload.precio_unidad,
+      payload.nombre,
+    ]
+  );
+};
+
+export const deleteInventario = (id: string) => {
+  return queryAsync<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.DELETE_INVENTORY_PRODUCT,
+    [id]
+  );
+};
