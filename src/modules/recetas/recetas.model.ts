@@ -1,7 +1,7 @@
 import { RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
-import { QueryParams } from "./recetas.types";
+import { QueryParams } from "../../core/types/recipes";
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,

@@ -23,8 +23,8 @@ export const getById = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const create = asyncHandler(async (req: Request, res: Response) => {
-  const { id_producto_stock, id_inventario, cantidades, unidad } = req.body;
-  await createIngredienteService({ id_producto_stock, id_inventario, cantidades, unidad });
+  const { id, id_producto_stock, id_inventario, cantidades, unidad } = req.body;
+  await createIngredienteService({ id, id_producto_stock, id_inventario, cantidades, unidad });
   return sendSuccess(res, 201, null, "Ingrediente creado exitosamente");
 });
 

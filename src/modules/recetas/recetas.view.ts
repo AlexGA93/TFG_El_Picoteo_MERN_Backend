@@ -1,4 +1,4 @@
-import { RecipesData } from "./recetas.types";
+import { RecipesData } from "../../core/types/recipes";
 
 export const recipesView = (data: RecipesData[]) => {
   return data.map((recipe) => ({

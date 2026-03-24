@@ -9,6 +9,7 @@ import {
 import { asyncHandler } from "../../core/utils/async-handler";
 import { HttpError } from "../../core/utils/http-error";
 import { sendSuccess } from "../../core/views/api-response.view";
+import { UpdateUserParams } from "../../core/types/auth";
 
 config();
 
@@ -28,8 +29,8 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
-  const userId = req.params.id;
-  const updated = await updateUserService(userId, req.body);
+  const userParams: UpdateUserParams = {userId: req.params.id, newParameters: req.body};
+  const updated = await updateUserService(userParams);
   if (!updated) {
     throw new HttpError(404, "Problema detectado a la hora de comprobar presencia de usuario");
   }

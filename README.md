@@ -50,6 +50,41 @@ docker network ls
 ```bash
 npx tsc --noEmit
 ```
+---
+
+## 1.1) Acciones Sobre la Base de Datos
+
+### Actualizacion de Tablas
+
+Habiendo accedido al contenedor de la base de datos y acreditandonos podemos cualquier serie de acciones. Entre otras, incorporamos una nueva columna adicional con nuevos registros:
+```bash
+ALTER TABLE Stock ADD COLUMN url VARCHAR(255) NOT NULL DEFAULT '';
+```
+
+Si quisieramos incorporarla despues de cualquier columna existente:
+```bash
+ALTER TABLE Stock
+ADD COLUMN imagen VARCHAR(255) NOT NULL DEFAULT '' AFTER columna_existente;
+```
+
+Habiendo habilitado la nueva columna, toca incorporar nuevos datos para los registros existentes. **Para este caso**, dado que tenemos un total de X (ej: 10) registros, formamos la siguiente query para actualizar varios de golpe:
+```bash
+UPDATE Stock
+SET imagen = CASE id
+  WHEN 1 THEN 'pan_casero.jpg'
+  WHEN 2 THEN 'bizcocho-de-maicena.jpg'
+  WHEN 3 THEN 'tarta_chocolate.jpg'
+  WHEN 4 THEN 'empanada-de-pollo.jpg'
+  WHEN 5 THEN 'ensalada-mixta.jpg'
+  WHEN 6 THEN 'smoothie_tarta_manzana.jpg'
+  WHEN 7 THEN 'pizza_margherita.jpg'
+  WHEN 8 THEN 'croquetas-de-jamon-caseras.jpg'
+  WHEN 9 THEN 'sandwich-vegetal.jpg'
+  WHEN 10 THEN 'tarta-de-queso.jpg'
+END
+WHERE id IN (1,2,3,4,5,6,7,8,9,10);
+
+```  
 
 ---
 

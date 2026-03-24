@@ -1,3 +1,4 @@
+import { Ingredient } from "../../core/types/ingredient";
 import {
   createIngrediente,
   deleteIngrediente,
@@ -8,17 +9,6 @@ import {
 
 export const getAllIngredientesService = () => getAllIngredientes();
 export const getIngredienteByIdService = (id: string) => getIngredienteById(id);
-export const createIngredienteService = (payload: {
-  id_producto_stock: number;
-  id_inventario: number;
-  cantidades: number;
-  unidad: string;
-}) => createIngrediente(payload);
-export const updateIngredienteService = (payload: {
-  id: string;
-  id_producto_stock: number;
-  id_inventario: number;
-  cantidades: number;
-  unidad: string;
-}) => updateIngrediente(payload);
+export const createIngredienteService = (payload: Ingredient) => createIngrediente(payload);
+export const updateIngredienteService = (payload: Ingredient) => updateIngrediente(payload);
 export const deleteIngredienteService = (id: string) => deleteIngrediente(id);

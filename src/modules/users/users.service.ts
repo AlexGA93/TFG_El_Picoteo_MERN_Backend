@@ -4,7 +4,7 @@ import {
   getUserById,
   updateUserNameAndSurname,
 } from "./users.model";
-import { UserBody } from "../../core/types/types";
+import { UpdateUserParams, UserBody } from "../../core/types/auth";
 
 export const getUsersService = () => getAllUsers();
 
@@ -20,7 +20,7 @@ export const getUserService = async (userId: string): Promise<UserBody | null> =
   };
 };
 
-export const updateUserService = async (userId: string, newParameters: any) => {
+export const updateUserService = async ({userId, newParameters}: UpdateUserParams) => {
   const currentUser = await getUserById(userId);
   if (!currentUser) return false;
 

@@ -7,7 +7,7 @@ import {
   registerUserService,
   validateTokenService,
 } from "./auth.service";
-import { UserBody, UserLogin } from "../../core/types/types";
+import { UserBody, UserLogin } from "../../core/types/auth";
 import { asyncHandler } from "../../core/utils/async-handler";
 import { HttpError } from "../../core/utils/http-error";
 import { sendSuccess } from "../../core/views/api-response.view";

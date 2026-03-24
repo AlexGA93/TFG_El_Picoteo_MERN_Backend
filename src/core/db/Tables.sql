@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Stock (
   precio_producto FLOAT NOT NULL,
   tiempo_produccion_min INT NOT NULL, -- antes era string "45 min" en mock
   dificultad ENUM('facil','media','dificil') NOT NULL,
+  url VARCHAR(500) NOT NULL,
   PRIMARY KEY (id)
 );
 

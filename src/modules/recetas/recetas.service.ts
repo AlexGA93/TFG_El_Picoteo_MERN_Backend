@@ -1,10 +1,10 @@
+import { RecipeRow, RecipesData } from "../../core/types/recipes";
 import { getRecipesRows } from "./recetas.model";
-import { RecipeRow } from "./recetas.types";
 
 export const buildRecipesData = async () => {
   const rows = await getRecipesRows();
 
-  const grouped = new Map<
+  const grouped: Map<number, RecipesData> = new Map<
     number,
     {
       id: number;

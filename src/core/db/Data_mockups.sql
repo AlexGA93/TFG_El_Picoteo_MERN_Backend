@@ -39,17 +39,17 @@ INSERT INTO Inventario (id, nombre, tipo, unidades, n_unidades, proveedor, preci
 -- ====================================
 -- Datos para la tabla Stock
 -- ====================================
-INSERT INTO Stock (id, nombre_producto, precio_producto, tiempo_produccion_min, dificultad) VALUES
-(1, 'Pan casero', 1.50, 45, 'facil'),
-(2, 'Bizcocho de vainilla', 8.00, 60, 'media'),
-(3, 'Tarta de chocolate', 15.00, 90, 'dificil'),
-(4, 'Empanada de pollo', 3.50, 50, 'media'),
-(5, 'Ensalada mixta', 5.50, 15, 'facil'),
-(6, 'Smoothie de manzana', 3.00, 10, 'facil'),
-(7, 'Pizza margarita', 9.00, 75, 'media'),
-(8, 'Croquetas', 6.00, 55, 'dificil'),
-(9, 'Sandwich vegetal', 4.50, 20, 'facil'),
-(10, 'Tarta de queso', 14.00, 120, 'dificil');
+INSERT INTO Stock (id, nombre_producto, precio_producto, tiempo_produccion_min, dificultad, url) VALUES
+(1, 'Pan casero', 1.50, 45, 'facil', 'pan_casero.jpg'),
+(2, 'Bizcocho de vainilla', 8.00, 60, 'media', 'bizcocho-de-maicena.jpg'),
+(3, 'Tarta de chocolate', 15.00, 90, 'dificil', 'tarta_chocolate.jpg'),
+(4, 'Empanada de pollo', 3.50, 50, 'media', 'empanada-de-pollo.jpg'),
+(5, 'Ensalada mixta', 5.50, 15, 'facil', 'ensalada-mixta.jpg'),
+(6, 'Smoothie de manzana', 3.00, 10, 'facil', 'smoothie_tarta_manzana.jpg'),
+(7, 'Pizza margarita', 9.00, 75, 'media', 'pizza_margherita.jpg'),
+(8, 'Croquetas', 6.00, 55, 'dificil', 'croquetas-de-jamon-caseras.jpg'),
+(9, 'Sandwich vegetal', 4.50, 20, 'facil', 'sandwich-vegetal.jpg'),
+(10, 'Tarta de queso', 14.00, 120, 'dificil', 'tarta-de-queso.jpg');
 
 
 -- ====================================

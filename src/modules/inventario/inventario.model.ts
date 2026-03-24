@@ -1,8 +1,9 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
+import { Inventory, QueryParams } from "../../core/types/inventory";
 
-type QueryParams = Array<string | number | boolean | Date | null>;
+
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,
@@ -28,14 +29,7 @@ export const getInventarioById = async (id: string) => {
   return result[0] ?? null;
 };
 
-export const createInventario = (payload: {
-  nombre: string;
-  tipo: string;
-  unidades: string;
-  n_unidades: number;
-  proveedor: string;
-  precio_unidad: number;
-}) => {
+export const createInventario = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.INSERT_INVENTORY_PRODUCT,
     [
@@ -49,15 +43,7 @@ export const createInventario = (payload: {
   );
 };
 
-export const updateInventario = (payload: {
-  id: string;
-  nombre: string;
-  tipo: string;
-  unidades: string;
-  n_unidades: number;
-  proveedor: string;
-  precio_unidad: number;
-}) => {
+export const updateInventario = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
     [

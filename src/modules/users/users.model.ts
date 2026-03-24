@@ -1,16 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
-
-type QueryParams = Array<string | number | boolean | Date | null>;
-
-type UserRow = RowDataPacket & {
-  id: number;
-  nombre: string;
-  apellidos: string;
-  email: string;
-  rol_usuario: string;
-};
+import { QueryParams, UserRow } from "../../core/types/auth";
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,

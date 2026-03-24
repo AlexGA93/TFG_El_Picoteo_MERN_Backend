@@ -6,7 +6,7 @@ import {
   validateUserByEmailAndRole,
 } from "./auth.model";
 import { hashingPassword } from "../../core/security/hashing";
-import { UserBody, UserLogin, VerifiedTokenType } from "../../core/types/types";
+import { UserBody, UserLogin, VerifiedTokenType } from "../../core/types/auth";
 
 type RegisterResult =
   | { status: "missing_password" }

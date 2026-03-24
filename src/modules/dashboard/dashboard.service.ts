@@ -1,3 +1,4 @@
+import { InventoryRow } from "../../core/types/dashboard";
 import {
   getRecipesSample,
   getStockSample,
@@ -5,17 +6,6 @@ import {
   getSalesPeriods,
   getExpensePeriods,
 } from "./dashboard.model";
-
-type InventoryRow = {
-  id: number;
-  nombre: string;
-  tipo: string;
-  unidades: string;
-  n_unidades: number;
-  proveedor: string;
-  precio_unidad: number;
-  fecha_registro: string;
-};
 
 export const buildDashboardData = async () => {
   const limit = 6;

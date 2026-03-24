@@ -4,7 +4,7 @@ import { sendSuccess } from "../../core/views/api-response.view";
 import { buildRecipesData } from "./recetas.service";
 import { recipesView } from "./recetas.view";
 
-export const getDatabaseRecipes = asyncHandler(async (req: Request, res: Response) => {
+export const getAll = asyncHandler(async (req: Request, res: Response) => {
     // servicio recetas
     const data = await buildRecipesData();
     // devolvemos respuesta con resultado

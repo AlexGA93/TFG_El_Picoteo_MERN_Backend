@@ -1,8 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
-
-type QueryParams = Array<string | number | boolean | Date | null>;
+import { Ingredient, QueryParams } from "../../core/types/ingredient";
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,
@@ -28,12 +27,7 @@ export const getIngredienteById = async (id: string) => {
   return result[0] ?? null;
 };
 
-export const createIngrediente = (payload: {
-  id_producto_stock: number;
-  id_inventario: number;
-  cantidades: number;
-  unidad: string;
-}) => {
+export const createIngrediente = (payload: Ingredient) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.INGREDIENTES.INSERT_INGREDIENT,
     [
@@ -45,13 +39,7 @@ export const createIngrediente = (payload: {
   );
 };
 
-export const updateIngrediente = (payload: {
-  id: string;
-  id_producto_stock: number;
-  id_inventario: number;
-  cantidades: number;
-  unidad: string;
-}) => {
+export const updateIngrediente = (payload: Ingredient) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.INGREDIENTES.UPDATE_INGREDIENT,
     [
