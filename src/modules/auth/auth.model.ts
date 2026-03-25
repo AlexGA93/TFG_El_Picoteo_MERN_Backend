@@ -1,6 +1,6 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
-import { UserBody } from "../../core/types/types";
+import { UserBody } from "../../core/types/auth";
 import { constants } from "../../core/utils/constants";
 
 type QueryParams = Array<string | number | boolean | Date | null>;

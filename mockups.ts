@@ -1,5 +1,5 @@
 
-// ============ MOCKUP DE RECETAS (Información básica) ============
+// ============ MOCKUP DE recipes (Información básica) ============
 export const mockRecipesData = [
   {
     nombre_producto: "Pan casero",
@@ -109,8 +109,8 @@ export const mockStockData = [
   },
 ];
 
-// ============ MOCKUP DE INVENTARIO (Agrupado por tipo) ============
-export const mockInventarioGrouped = [
+// ============ MOCKUP DE inventory (Agrupado por tipo) ============
+export const mockinventoryGrouped = [
   {
     tipo: "Cereales",
     items: [
@@ -359,7 +359,7 @@ export const mockGastosData = [
 export const mockDashboardData = {
   recipes: mockRecipesData,
   stock: mockStockData,
-  inventory: mockInventarioGrouped,
+  inventory: mockinventoryGrouped,
   ventas: mockVentasData,
   gastos: mockGastosData,
 };

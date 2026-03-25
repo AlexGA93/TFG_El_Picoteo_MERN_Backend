@@ -5,7 +5,7 @@ export type RecipeRow = {
   tiempo_produccion_min: number;
   dificultad: "facil" | "media" | "dificil";
   ingrediente_id: number | null;
-  id_inventario: number | null;
+  id_inventory: number | null;
   ingrediente_nombre: string | null;
   ingrediente_tipo: string | null;
   cantidad: number | null;
@@ -16,7 +16,7 @@ export type QueryParams = Array<string | number | boolean | Date | null>;
 
 export interface RecipesIngredients {
   id: number;
-  id_inventario: number;
+  id_inventory: number;
   nombre: string;
   tipo: string;
   cantidad: number;
@@ -28,5 +28,5 @@ export interface RecipesData {
   precio: number;
   tiempo_produccion_min: number;
   dificultad: string;
-  ingredientes: RecipesIngredients[];
+  ingredients: RecipesIngredients[];
 }

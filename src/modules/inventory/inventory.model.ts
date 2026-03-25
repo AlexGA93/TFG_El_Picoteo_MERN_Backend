@@ -1,8 +1,9 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
+import { Inventory, QueryParams } from "../../core/types/inventory";
 
-type QueryParams = Array<string | number | boolean | Date | null>;
+
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,
@@ -16,26 +17,19 @@ const queryAsync = <T = RowDataPacket[]>(
   });
 };
 
-export const getAllInventario = () => {
-  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_ALL);
+export const getAllinventory = () => {
+  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.inventory.GET_ALL);
 };
 
-export const getInventarioById = async (id: string) => {
+export const getinventoryById = async (id: string) => {
   const result = await queryAsync<RowDataPacket[]>(
-    constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_BY_ID,
+    constants.SQL_QUERIES.DATABASE.inventory.GET_BY_ID,
     [id]
   );
   return result[0] ?? null;
 };
 
-export const createInventario = (payload: {
-  nombre: string;
-  tipo: string;
-  unidades: string;
-  n_unidades: number;
-  proveedor: string;
-  precio_unidad: number;
-}) => {
+export const createinventory = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.INSERT_INVENTORY_PRODUCT,
     [
@@ -49,15 +43,7 @@ export const createInventario = (payload: {
   );
 };
 
-export const updateInventario = (payload: {
-  id: string;
-  nombre: string;
-  tipo: string;
-  unidades: string;
-  n_unidades: number;
-  proveedor: string;
-  precio_unidad: number;
-}) => {
+export const updateinventory = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
     [
@@ -71,7 +57,7 @@ export const updateInventario = (payload: {
   );
 };
 
-export const deleteInventario = (id: string) => {
+export const deleteinventory = (id: string) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.DELETE_INVENTORY_PRODUCT,
     [id]

@@ -1,20 +1,14 @@
 import { Router } from "express";
 import {
   checkDDBB,
-  getDatabaseTables,
   createTables,
-  getTableData,
   insertIntoTables,
 } from "./database.controller";
 import { authenticationByAdmin, authenticationByBoth } from "../../core/auth/auth";
-import { getDashboardData } from "../dashboard/dashboard.controller";
-import inventarioRouter from "../inventario/inventario.routes";
-import stockRouter from "../stock/stock.routes";
-import ingredientesRouter from "../ingredientes/ingredientes.routes";
-import pagosRouter from "../pagos/pagos.routes";
-import { getDatabaseRecipes } from "../recetas/recetas.controller";
-import { getDatabaseStock } from "../stock/stock.controller";
-import { getDatabaseInventory } from "../inventario/inventario.controller";
+import dashboardRoutes from "../dashboard/dashboard.routes";
+import recipesRoutes from "../recipes/recipes.routes";
+import stockRoutes from "../stock/stock.routes";
+import inventoryRoutes from "../inventory/inventory.routes";
 const router: Router = Router();
 
 /**
@@ -32,20 +26,9 @@ router.get("/mockup-insertion", authenticationByAdmin, insertIntoTables);
  * ---------------------------------------------------------------------------
  */
 // dashboard
-router.get("/dashboard", authenticationByBoth, getDashboardData);
-router.get("/recetas", authenticationByBoth, getDatabaseRecipes);
-router.get("/stock", authenticationByBoth, getDatabaseStock);
-router.get("/inventario", authenticationByBoth, getDatabaseInventory);
-
-
-
-// // Employee + Admin
-// router.get("/tables", authenticationByBoth, getDatabaseTables);
-// // router.get("/store", authenticationByBoth, getGlobalStoreData);
-// router.get("/tables/:table_name", authenticationByBoth, getTableData);
-// router.use("/inventario", authenticationByBoth, inventarioRouter);
-// router.use("/stock", authenticationByBoth, stockRouter);
-// router.use("/ingredientes", authenticationByBoth, ingredientesRouter);
-// router.use("/pagos", authenticationByBoth, pagosRouter);
+router.use("/dashboard", authenticationByBoth, dashboardRoutes);
+router.use("/recipes", authenticationByBoth, recipesRoutes);
+router.use("/stock", authenticationByBoth, stockRoutes);
+router.use("/inventory", authenticationByBoth, inventoryRoutes);
 
 export default router;

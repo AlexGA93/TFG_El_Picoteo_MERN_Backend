@@ -1,10 +1,10 @@
-import { getRecipesRows } from "./recetas.model";
-import { RecipeRow } from "./recetas.types";
+import { RecipeRow, RecipesData } from "../../core/types/recipes";
+import { getRecipesRows } from "./recipes.model";
 
 export const buildRecipesData = async () => {
   const rows = await getRecipesRows();
 
-  const grouped = new Map<
+  const grouped: Map<number, RecipesData> = new Map<
     number,
     {
       id: number;
@@ -12,9 +12,9 @@ export const buildRecipesData = async () => {
       precio: number;
       tiempo_produccion_min: number;
       dificultad: string;
-      ingredientes: {
+      ingredients: {
         id: number;
-        id_inventario: number;
+        id_inventory: number;
         nombre: string;
         tipo: string;
         cantidad: number;
@@ -31,16 +31,16 @@ export const buildRecipesData = async () => {
         precio: Number(row.precio_producto),
         tiempo_produccion_min: Number(row.tiempo_produccion_min),
         dificultad: row.dificultad,
-        ingredientes: [],
+        ingredients: [],
       });
     }
 
     const recipe = grouped.get(row.id)!;
 
     if (row.ingrediente_id !== null) {
-      recipe.ingredientes.push({
+      recipe.ingredients.push({
         id: row.ingrediente_id,
-        id_inventario: row.id_inventario!,
+        id_inventory: row.id_inventory!,
         nombre: row.ingrediente_nombre!,
         tipo: row.ingrediente_tipo!,
         cantidad: Number(row.cantidad),

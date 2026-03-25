@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Usuarios(
+CREATE TABLE IF NOT EXISTS Users(
   id INT NOT NULL AUTO_INCREMENT,
   nombre VARCHAR(255) NOT NULL,
   apellidos VARCHAR(255) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Usuarios(
   PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS Inventario (
+CREATE TABLE IF NOT EXISTS Inventory (
   id INT NOT NULL AUTO_INCREMENT,
   nombre VARCHAR(255) NOT NULL,
   tipo ENUM('Carnes','Pescados','Verduras','Frutas','Especias','Lacteos','Cereales','Aceites','Bebidas') NOT NULL,
@@ -27,23 +27,24 @@ CREATE TABLE IF NOT EXISTS Stock (
   precio_producto FLOAT NOT NULL,
   tiempo_produccion_min INT NOT NULL, -- antes era string "45 min" en mock
   dificultad ENUM('facil','media','dificil') NOT NULL,
+  url VARCHAR(500) NOT NULL,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS Ingredientes(
+CREATE TABLE IF NOT EXISTS Ingredients(
   id INT NOT NULL AUTO_INCREMENT,
   id_producto_stock INT NOT NULL,
-  id_inventario INT NOT NULL,
+  id_inventory INT NOT NULL,
   cantidades FLOAT NOT NULL,
   unidad ENUM('kg', 'litros', 'unidad', 'metros', 'gramos') NOT NULL,
   fecha_registro DATETIME NOT NULL,
   
   PRIMARY KEY (id),
   FOREIGN KEY (id_producto_stock) REFERENCES Stock(id), -- Muchos a mucho
-  FOREIGN KEY (id_inventario) REFERENCES Inventario(id) -- Muchos a muchos
+  FOREIGN KEY (id_inventory) REFERENCES Inventory(id) -- Muchos a muchos
 );
 
-CREATE TABLE IF NOT EXISTS Pagos(
+CREATE TABLE IF NOT EXISTS Payments(
   id INT NOT NULL AUTO_INCREMENT,
   id_stock INT NOT NULL,
   fecha_pago DATETIME NOT NULL,

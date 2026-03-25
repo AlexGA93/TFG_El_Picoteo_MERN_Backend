@@ -1,8 +1,8 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
+import { CompleteStock, QueryParams, Stock } from "../../core/types/stock";
 
-type QueryParams = Array<string | number | boolean | Date | null>;
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,
@@ -28,12 +28,7 @@ export const getStockById = async (id: string) => {
   return result[0] ?? null;
 };
 
-export const createStock = (payload: {
-  nombre_producto: string;
-  precio_producto: number;
-  tiempo_produccion_min: number;
-  dificultad: string;
-}) => {
+export const createStock = (payload: CompleteStock) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.STOCK.INSERT_STOCK_PRODUCT,
     [
@@ -41,17 +36,14 @@ export const createStock = (payload: {
       payload.precio_producto,
       payload.tiempo_produccion_min,
       payload.dificultad,
+      payload.url
     ]
   );
 };
 
-export const updateStock = (payload: {
-  id: string;
-  nombre_producto: string;
-  precio_producto: number;
-  tiempo_produccion_min: number;
-  dificultad: string;
-}) => {
+export const updateStock = (payload: Stock) => {
+  console.log({payload});
+  
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.STOCK.UPDATE_STOCK_PRODUCT,
     [
@@ -59,7 +51,8 @@ export const updateStock = (payload: {
       payload.precio_producto,
       payload.tiempo_produccion_min,
       payload.dificultad,
-      payload.id,
+      payload.url ?? "",
+      payload.id!,
     ]
   );
 };

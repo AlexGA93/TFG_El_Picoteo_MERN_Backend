@@ -22,6 +22,29 @@ docker compose -f docker-compose-dev.yml down
 docker compose -f docker-compose-dev.yml build --pull --no-cache
 ```
 
+### Aplicar cambios recientes al entorno Docker
+Cuando se hagan cambios en el codigo, en `package.json`, en `package-lock.json` o en la configuracion del contenedor, es importante volver a levantar el entorno para que los contenedores usen la informacion mas nueva.
+
+Si solo han cambiado archivos del proyecto y quieres reconstruir el backend:
+```bash
+docker compose -f docker-compose-dev.yml down
+docker compose -f docker-compose-dev.yml up --build
+```
+
+Si has agregado o actualizado dependencias y el contenedor sigue usando modulos antiguos, recrea tambien los volumenes:
+```bash
+docker compose -f docker-compose-dev.yml down -v
+docker compose -f docker-compose-dev.yml up --build
+```
+
+Esto es especialmente importante en desarrollo porque `docker-compose-dev.yml` monta un volumen persistente para `/home/app/node_modules`. Si ese volumen fue creado antes de instalar una dependencia nueva, el contenedor puede seguir viendo una version antigua aunque la imagen se haya reconstruido.
+
+Si quieres forzar una reconstruccion completa sin reutilizar cache:
+```bash
+docker compose -f docker-compose-dev.yml build --no-cache
+docker compose -f docker-compose-dev.yml up
+```
+
 ### Logs
 ```bash
 docker compose -f docker-compose-dev.yml logs -f
@@ -50,6 +73,41 @@ docker network ls
 ```bash
 npx tsc --noEmit
 ```
+---
+
+## 1.1) Acciones Sobre la Base de Datos
+
+### Actualizacion de Tablas
+
+Habiendo accedido al contenedor de la base de datos y acreditandonos podemos cualquier serie de acciones. Entre otras, incorporamos una nueva columna adicional con nuevos registros:
+```bash
+ALTER TABLE Stock ADD COLUMN url VARCHAR(255) NOT NULL DEFAULT '';
+```
+
+Si quisieramos incorporarla despues de cualquier columna existente:
+```bash
+ALTER TABLE Stock
+ADD COLUMN imagen VARCHAR(255) NOT NULL DEFAULT '' AFTER columna_existente;
+```
+
+Habiendo habilitado la nueva columna, toca incorporar nuevos datos para los registros existentes. **Para este caso**, dado que tenemos un total de X (ej: 10) registros, formamos la siguiente query para actualizar varios de golpe:
+```bash
+UPDATE Stock
+SET imagen = CASE id
+  WHEN 1 THEN 'pan_casero.jpg'
+  WHEN 2 THEN 'bizcocho-de-maicena.jpg'
+  WHEN 3 THEN 'tarta_chocolate.jpg'
+  WHEN 4 THEN 'empanada-de-pollo.jpg'
+  WHEN 5 THEN 'ensalada-mixta.jpg'
+  WHEN 6 THEN 'smoothie_tarta_manzana.jpg'
+  WHEN 7 THEN 'pizza_margherita.jpg'
+  WHEN 8 THEN 'croquetas-de-jamon-caseras.jpg'
+  WHEN 9 THEN 'sandwich-vegetal.jpg'
+  WHEN 10 THEN 'tarta-de-queso.jpg'
+END
+WHERE id IN (1,2,3,4,5,6,7,8,9,10);
+
+```  
 
 ---
 
@@ -111,7 +169,7 @@ src/
     views/                        # respuesta API estandar
 
   modules/
-    <modulo>/                     # auth, users, inventario, etc.
+    <modulo>/                     # auth, users, inventory, etc.
       *.routes.ts                 # Route
       *.controller.ts             # Controller
       *.service.ts                # Service
@@ -140,10 +198,10 @@ src/
     users/
     database/
     dashboard/
-    inventario/
+    inventory/
     stock/
-    ingredientes/
-    pagos/
+    ingredients/
+    payments/
 ```
 
 ### Rol de cada capa
@@ -209,7 +267,7 @@ src/
 - `GET /tables` (admin o employee)
 - `GET /tables/:table_name` (admin o employee)
 
-#### CRUD Inventario (`/api/databases/inventario`)
+#### CRUD inventory (`/api/databases/inventory`)
 - `GET /`
 - `GET /:id`
 - `POST /`
@@ -223,14 +281,14 @@ src/
 - `PUT /:id`
 - `DELETE /:id`
 
-#### CRUD Ingredientes (`/api/databases/ingredientes`)
+#### CRUD ingredients (`/api/databases/ingredients`)
 - `GET /`
 - `GET /:id`
 - `POST /`
 - `PUT /:id`
 - `DELETE /:id`
 
-#### CRUD Pagos (`/api/databases/pagos`)
+#### CRUD payments (`/api/databases/payments`)
 - `GET /`
 - `GET /:id`
 - `POST /`

@@ -1,30 +1,31 @@
 import { Request, Response } from "express";
 import {
-  createInventarioService,
-  deleteInventarioService,
-  getAllInventarioService,
-  getInventarioByIdService,
-  updateInventarioService,
-} from "./inventario.service";
+  createinventoryService,
+  deleteinventoryService,
+  getAllinventoryService,
+  getinventoryByIdService,
+  updateinventoryService,
+} from "./inventory.service";
 import { asyncHandler } from "../../core/utils/async-handler";
 import { HttpError } from "../../core/utils/http-error";
 import { sendSuccess } from "../../core/views/api-response.view";
+import { constants } from "../../core/utils/constants";
 
-export const getDatabaseInventory = asyncHandler(async (req: Request, res: Response) => {
-  const result = await getAllInventarioService();
-  return sendSuccess(res, 200, result);
+export const getAll = asyncHandler(async (req: Request, res: Response) => {
+  const result = await getAllinventoryService();
+  return sendSuccess(res, constants.HTTP_STATUS.OK, result);
 });
 
 export const getById = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await getInventarioByIdService(id);
-  if (!result) throw new HttpError(404, "Producto no encontrado");
-  return sendSuccess(res, 200, [result]);
+  const result = await getinventoryByIdService(id);
+  if (!result) throw new HttpError(constants.HTTP_STATUS.NOT_FOUND, "Producto no encontrado");
+  return sendSuccess(res, constants.HTTP_STATUS.OK, [result]);
 });
 
 export const create = asyncHandler(async (req: Request, res: Response) => {
   const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
-  const result = await createInventarioService({
+  const result = await createinventoryService({
     nombre,
     tipo,
     unidades,
@@ -38,7 +39,7 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
 export const update = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
-  await updateInventarioService({
+  await updateinventoryService({
     id,
     nombre,
     tipo,
@@ -47,11 +48,11 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     proveedor,
     precio_unidad,
   });
-  return sendSuccess(res, 200, null, "Producto actualizado exitosamente");
+  return sendSuccess(res, constants.HTTP_STATUS.OK, null, "Producto actualizado exitosamente");
 });
 
 export const remove = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  await deleteInventarioService(id);
-  return sendSuccess(res, 200, null, "Producto eliminado exitosamente");
+  await deleteinventoryService(id);
+  return sendSuccess(res, constants.HTTP_STATUS.OK, null, "Producto eliminado exitosamente");
 });

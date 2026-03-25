@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { VerifiedTokenType } from "../types/types";
+import { VerifiedTokenType } from "../types/auth";
 
 const jwtKey: string = "ElPicoteoTFG";
 const emailRegex: RegExp = /^[A-Za-z0-9._%+-]+@elpicoteo\.com$/;

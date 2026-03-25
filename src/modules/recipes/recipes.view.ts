@@ -1,4 +1,4 @@
-import { RecipesData } from "./recetas.types";
+import { RecipesData } from "../../core/types/recipes";
 
 export const recipesView = (data: RecipesData[]) => {
   return data.map((recipe) => ({
@@ -7,6 +7,6 @@ export const recipesView = (data: RecipesData[]) => {
     precio: recipe.precio,
     tiempo_produccion_min: recipe.tiempo_produccion_min,
     dificultad: recipe.dificultad,
-    ingredientes: [...recipe.ingredientes],
+    ingredients: [...recipe.ingredients],
   }));
 };

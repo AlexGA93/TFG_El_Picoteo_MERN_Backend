@@ -1,10 +1,5 @@
-type DashboardResponse = {
-  recipes: unknown;
-  stock: unknown;
-  inventory: unknown;
-  ventas: unknown;
-  gastos: unknown;
-};
+import { DashboardResponse } from "../../core/types/dashboard";
+
 
 export const dashboardView = (data: DashboardResponse) => {
   return {
