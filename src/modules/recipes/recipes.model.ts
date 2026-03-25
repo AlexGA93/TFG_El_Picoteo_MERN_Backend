@@ -16,7 +16,7 @@ const queryAsync = <T = RowDataPacket[]>(
 };
 
 export const getRecipesRows = () => {
-  const sql = constants.SQL_QUERIES.DATABASE.RECETAS.GET_ALL_RECIPES;
+  const sql = constants.SQL_QUERIES.DATABASE.recipes.GET_ALL_RECIPES;
 
   return queryAsync<RowDataPacket[]>(sql);
 };

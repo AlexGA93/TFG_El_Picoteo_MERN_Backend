@@ -42,6 +42,8 @@ export const createStock = (payload: CompleteStock) => {
 };
 
 export const updateStock = (payload: Stock) => {
+  console.log({payload});
+  
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.STOCK.UPDATE_STOCK_PRODUCT,
     [
@@ -49,7 +51,8 @@ export const updateStock = (payload: Stock) => {
       payload.precio_producto,
       payload.tiempo_produccion_min,
       payload.dificultad,
-      payload.id,
+      payload.url ?? "",
+      payload.id!,
     ]
   );
 };

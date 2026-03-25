@@ -6,9 +6,9 @@ import {
 } from "./database.controller";
 import { authenticationByAdmin, authenticationByBoth } from "../../core/auth/auth";
 import dashboardRoutes from "../dashboard/dashboard.routes";
-import recetasRoutes from "../recetas/recetas.routes";
+import recipesRoutes from "../recipes/recipes.routes";
 import stockRoutes from "../stock/stock.routes";
-import inventarioRoutes from "../inventario/inventario.routes";
+import inventoryRoutes from "../inventory/inventory.routes";
 const router: Router = Router();
 
 /**
@@ -26,9 +26,9 @@ router.get("/mockup-insertion", authenticationByAdmin, insertIntoTables);
  * ---------------------------------------------------------------------------
  */
 // dashboard
-router.get("/dashboard", authenticationByBoth, dashboardRoutes);
-router.get("/recetas", authenticationByBoth, recetasRoutes);
-router.get("/stock", authenticationByBoth, stockRoutes);
-router.get("/inventario", authenticationByBoth, inventarioRoutes);
+router.use("/dashboard", authenticationByBoth, dashboardRoutes);
+router.use("/recipes", authenticationByBoth, recipesRoutes);
+router.use("/stock", authenticationByBoth, stockRoutes);
+router.use("/inventory", authenticationByBoth, inventoryRoutes);
 
 export default router;

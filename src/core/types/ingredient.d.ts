@@ -5,7 +5,7 @@ export type IngredientUnit = 'kg' | 'litros' | 'unidad' | 'metros' | 'gramos';
 export interface Ingredient {
     id: string;
     id_producto_stock: number;
-    id_inventario: number;
+    id_inventory: number;
     cantidades: number;
     unidad: InventoryUnit;
 }

@@ -17,19 +17,19 @@ const queryAsync = <T = RowDataPacket[]>(
   });
 };
 
-export const getAllInventario = () => {
-  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_ALL);
+export const getAllinventory = () => {
+  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.inventory.GET_ALL);
 };
 
-export const getInventarioById = async (id: string) => {
+export const getinventoryById = async (id: string) => {
   const result = await queryAsync<RowDataPacket[]>(
-    constants.SQL_QUERIES.DATABASE.INVENTARIO.GET_BY_ID,
+    constants.SQL_QUERIES.DATABASE.inventory.GET_BY_ID,
     [id]
   );
   return result[0] ?? null;
 };
 
-export const createInventario = (payload: Inventory) => {
+export const createinventory = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.INSERT_INVENTORY_PRODUCT,
     [
@@ -43,7 +43,7 @@ export const createInventario = (payload: Inventory) => {
   );
 };
 
-export const updateInventario = (payload: Inventory) => {
+export const updateinventory = (payload: Inventory) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
     [
@@ -57,7 +57,7 @@ export const updateInventario = (payload: Inventory) => {
   );
 };
 
-export const deleteInventario = (id: string) => {
+export const deleteinventory = (id: string) => {
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.DELETE_INVENTORY_PRODUCT,
     [id]

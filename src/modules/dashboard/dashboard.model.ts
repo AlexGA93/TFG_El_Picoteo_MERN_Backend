@@ -38,7 +38,7 @@ export const getStockSample = (limit = 6) => {
       precio_unidad AS precio_producto,
       n_unidades AS cantidad,
       unidades AS unidad
-    FROM Inventario
+    FROM inventory
     ORDER BY fecha_registro DESC, id DESC
     LIMIT ?;
   `;
@@ -56,7 +56,7 @@ export const getInventoryRows = () => {
       proveedor,
       precio_unidad,
       fecha_registro
-    FROM Inventario
+    FROM inventory
     ORDER BY tipo, fecha_registro DESC, id DESC;
   `;
   return queryAsync<RowDataPacket[]>(sql);
@@ -65,32 +65,32 @@ export const getInventoryRows = () => {
 export const getSalesPeriods = () => {
   const sql = `
     SELECT 'Hoy' AS periodo, COALESCE(ROUND(SUM(s.precio_producto), 2), 0) AS totalDinero, COUNT(p.id) AS numeroOrdenes
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() AND p.fecha_pago < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ayer', COALESCE(ROUND(SUM(s.precio_producto), 2), 0), COUNT(p.id)
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() - INTERVAL 1 DAY AND p.fecha_pago < CURDATE()
     UNION ALL
     SELECT 'Semana Pasada', COALESCE(ROUND(SUM(s.precio_producto), 2), 0), COUNT(p.id)
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() - INTERVAL 7 DAY AND p.fecha_pago < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Mes Pasado', COALESCE(ROUND(SUM(s.precio_producto), 2), 0), COUNT(p.id)
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() - INTERVAL 1 MONTH AND p.fecha_pago < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ultimo Trimestre', COALESCE(ROUND(SUM(s.precio_producto), 2), 0), COUNT(p.id)
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() - INTERVAL 3 MONTH AND p.fecha_pago < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ultimo Yr', COALESCE(ROUND(SUM(s.precio_producto), 2), 0), COUNT(p.id)
-    FROM Pagos p
+    FROM payments p
     JOIN Stock s ON s.id = p.id_stock
     WHERE p.fecha_pago >= CURDATE() - INTERVAL 1 YEAR AND p.fecha_pago < CURDATE() + INTERVAL 1 DAY;
   `;
@@ -100,27 +100,27 @@ export const getSalesPeriods = () => {
 export const getExpensePeriods = () => {
   const sql = `
     SELECT 'Hoy' AS periodo, COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0) AS totalDinero, COUNT(i.id) AS numeroOrdenes
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() AND i.fecha_registro < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ayer', COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0), COUNT(i.id)
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() - INTERVAL 1 DAY AND i.fecha_registro < CURDATE()
     UNION ALL
     SELECT 'Semana Pasada', COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0), COUNT(i.id)
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() - INTERVAL 7 DAY AND i.fecha_registro < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Mes Pasado', COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0), COUNT(i.id)
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() - INTERVAL 1 MONTH AND i.fecha_registro < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ultimo Trimestre', COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0), COUNT(i.id)
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() - INTERVAL 3 MONTH AND i.fecha_registro < CURDATE() + INTERVAL 1 DAY
     UNION ALL
     SELECT 'Ultimo Yr', COALESCE(ROUND(SUM(i.n_unidades * i.precio_unidad), 2), 0), COUNT(i.id)
-    FROM Inventario i
+    FROM inventory i
     WHERE i.fecha_registro >= CURDATE() - INTERVAL 1 YEAR AND i.fecha_registro < CURDATE() + INTERVAL 1 DAY;
   `;
   return queryAsync<RowDataPacket[]>(sql);

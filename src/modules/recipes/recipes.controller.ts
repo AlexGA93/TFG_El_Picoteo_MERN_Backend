@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../core/utils/async-handler";
 import { sendSuccess } from "../../core/views/api-response.view";
-import { buildRecipesData } from "./recetas.service";
-import { recipesView } from "./recetas.view";
+import { buildRecipesData } from "./recipes.service";
+import { recipesView } from "./recipes.view";
+import { constants } from "../../core/utils/constants";
 
 export const getAll = asyncHandler(async (req: Request, res: Response) => {
-    // servicio recetas
+    // servicio recipes
     const data = await buildRecipesData();
     // devolvemos respuesta con resultado
-    return sendSuccess(res, 200, recipesView(data), "Recetas obtenidas");
+    return sendSuccess(res, constants.HTTP_STATUS.OK, recipesView(data), "recipes obtenidas");
 });

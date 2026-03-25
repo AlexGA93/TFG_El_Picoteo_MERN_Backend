@@ -15,13 +15,13 @@ const queryAsync = <T = RowDataPacket[]>(
   });
 };
 
-export const getAllIngredientes = () => {
-  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.INGREDIENTES.GET_ALL);
+export const getAllingredients = () => {
+  return queryAsync<RowDataPacket[]>(constants.SQL_QUERIES.DATABASE.ingredients.GET_ALL);
 };
 
 export const getIngredienteById = async (id: string) => {
   const result = await queryAsync<RowDataPacket[]>(
-    constants.SQL_QUERIES.DATABASE.INGREDIENTES.GET_BY_ID,
+    constants.SQL_QUERIES.DATABASE.ingredients.GET_BY_ID,
     [id]
   );
   return result[0] ?? null;
@@ -29,10 +29,10 @@ export const getIngredienteById = async (id: string) => {
 
 export const createIngrediente = (payload: Ingredient) => {
   return queryAsync<ResultSetHeader>(
-    constants.SQL_QUERIES.DATABASE.INGREDIENTES.INSERT_INGREDIENT,
+    constants.SQL_QUERIES.DATABASE.ingredients.INSERT_INGREDIENT,
     [
       payload.id_producto_stock,
-      payload.id_inventario,
+      payload.id_inventory,
       payload.cantidades,
       payload.unidad,
     ]
@@ -41,10 +41,10 @@ export const createIngrediente = (payload: Ingredient) => {
 
 export const updateIngrediente = (payload: Ingredient) => {
   return queryAsync<ResultSetHeader>(
-    constants.SQL_QUERIES.DATABASE.INGREDIENTES.UPDATE_INGREDIENT,
+    constants.SQL_QUERIES.DATABASE.ingredients.UPDATE_INGREDIENT,
     [
       payload.id_producto_stock,
-      payload.id_inventario,
+      payload.id_inventory,
       payload.cantidades,
       payload.unidad,
       payload.id,
@@ -54,7 +54,7 @@ export const updateIngrediente = (payload: Ingredient) => {
 
 export const deleteIngrediente = (id: string) => {
   return queryAsync<ResultSetHeader>(
-    constants.SQL_QUERIES.DATABASE.INGREDIENTES.DELETE_INGREDIENT,
+    constants.SQL_QUERIES.DATABASE.ingredients.DELETE_INGREDIENT,
     [id]
   );
 };

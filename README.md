@@ -22,6 +22,29 @@ docker compose -f docker-compose-dev.yml down
 docker compose -f docker-compose-dev.yml build --pull --no-cache
 ```
 
+### Aplicar cambios recientes al entorno Docker
+Cuando se hagan cambios en el codigo, en `package.json`, en `package-lock.json` o en la configuracion del contenedor, es importante volver a levantar el entorno para que los contenedores usen la informacion mas nueva.
+
+Si solo han cambiado archivos del proyecto y quieres reconstruir el backend:
+```bash
+docker compose -f docker-compose-dev.yml down
+docker compose -f docker-compose-dev.yml up --build
+```
+
+Si has agregado o actualizado dependencias y el contenedor sigue usando modulos antiguos, recrea tambien los volumenes:
+```bash
+docker compose -f docker-compose-dev.yml down -v
+docker compose -f docker-compose-dev.yml up --build
+```
+
+Esto es especialmente importante en desarrollo porque `docker-compose-dev.yml` monta un volumen persistente para `/home/app/node_modules`. Si ese volumen fue creado antes de instalar una dependencia nueva, el contenedor puede seguir viendo una version antigua aunque la imagen se haya reconstruido.
+
+Si quieres forzar una reconstruccion completa sin reutilizar cache:
+```bash
+docker compose -f docker-compose-dev.yml build --no-cache
+docker compose -f docker-compose-dev.yml up
+```
+
 ### Logs
 ```bash
 docker compose -f docker-compose-dev.yml logs -f
@@ -146,7 +169,7 @@ src/
     views/                        # respuesta API estandar
 
   modules/
-    <modulo>/                     # auth, users, inventario, etc.
+    <modulo>/                     # auth, users, inventory, etc.
       *.routes.ts                 # Route
       *.controller.ts             # Controller
       *.service.ts                # Service
@@ -175,10 +198,10 @@ src/
     users/
     database/
     dashboard/
-    inventario/
+    inventory/
     stock/
-    ingredientes/
-    pagos/
+    ingredients/
+    payments/
 ```
 
 ### Rol de cada capa
@@ -244,7 +267,7 @@ src/
 - `GET /tables` (admin o employee)
 - `GET /tables/:table_name` (admin o employee)
 
-#### CRUD Inventario (`/api/databases/inventario`)
+#### CRUD inventory (`/api/databases/inventory`)
 - `GET /`
 - `GET /:id`
 - `POST /`
@@ -258,14 +281,14 @@ src/
 - `PUT /:id`
 - `DELETE /:id`
 
-#### CRUD Ingredientes (`/api/databases/ingredientes`)
+#### CRUD ingredients (`/api/databases/ingredients`)
 - `GET /`
 - `GET /:id`
 - `POST /`
 - `PUT /:id`
 - `DELETE /:id`
 
-#### CRUD Pagos (`/api/databases/pagos`)
+#### CRUD payments (`/api/databases/payments`)
 - `GET /`
 - `GET /:id`
 - `POST /`

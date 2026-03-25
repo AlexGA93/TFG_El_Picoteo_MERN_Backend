@@ -7,6 +7,6 @@ export const recipesView = (data: RecipesData[]) => {
     precio: recipe.precio,
     tiempo_produccion_min: recipe.tiempo_produccion_min,
     dificultad: recipe.dificultad,
-    ingredientes: [...recipe.ingredientes],
+    ingredients: [...recipe.ingredients],
   }));
 };

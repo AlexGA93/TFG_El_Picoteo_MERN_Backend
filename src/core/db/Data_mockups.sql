@@ -2,24 +2,24 @@
 -- Reset de datos (orden correcto por FK)
 -- ====================================
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE Ingredientes;
-TRUNCATE TABLE Pagos;
+TRUNCATE TABLE Ingredients;
+TRUNCATE TABLE Payments;
 TRUNCATE TABLE Stock;
-TRUNCATE TABLE Inventario;
-TRUNCATE TABLE Usuarios;
+TRUNCATE TABLE Inventory;
+TRUNCATE TABLE Users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ====================================
 -- Datos para la tabla Usuarios
 -- ====================================
-INSERT INTO Usuarios (id, nombre, apellidos, email, password, rol_usuario) VALUES
+INSERT INTO Users (id, nombre, apellidos, email, password, rol_usuario) VALUES
 (1, 'Juan', 'Perez Gomez', 'juan.perez@elpicoteo.com', 'hashed_pass_1', 'admin'),
 (2, 'Maria', 'Lopez Sanchez', 'maria.lopez@elpicoteo.com', 'hashed_pass_2', 'employee'),
 (3, 'Carlos', 'Ramirez Diaz', 'carlos.ramirez@elpicoteo.com', 'hashed_pass_3', 'employee');
 -- ====================================
--- Datos para la tabla Inventario
+-- Datos para la tabla inventory
 -- ====================================
-INSERT INTO Inventario (id, nombre, tipo, unidades, n_unidades, proveedor, precio_unidad, fecha_registro) VALUES
+INSERT INTO Inventory (id, nombre, tipo, unidades, n_unidades, proveedor, precio_unidad, fecha_registro) VALUES
 (1, 'Harina', 'Cereales', 'kg', 120, 'Molinos SA', 0.80, '2025-01-10 09:30:00'),
 (2, 'Leche', 'Lacteos', 'litros', 250, 'Lacteos del Sur', 0.60, '2025-01-12 11:00:00'),
 (3, 'Huevos', 'Lacteos', 'unidad', 500, 'Granja Los Pinos', 0.10, '2025-01-15 08:45:00'),
@@ -53,9 +53,9 @@ INSERT INTO Stock (id, nombre_producto, precio_producto, tiempo_produccion_min, 
 
 
 -- ====================================
--- Datos para la tabla Ingredientes
+-- Datos para la tabla ingredients
 -- ====================================
-INSERT INTO Ingredientes (id, id_producto_stock, id_inventario, cantidades, unidad, fecha_registro) VALUES
+INSERT INTO Ingredients (id, id_producto_stock, id_inventory, cantidades, unidad, fecha_registro) VALUES
 (1, 1, 1, 0.25, 'kg', '2025-01-22 09:00:00'),
 (2, 1, 2, 0.10, 'litros', '2025-01-22 09:00:00'),
 (3, 1, 3, 2, 'unidad', '2025-01-22 09:00:00'),
@@ -94,9 +94,9 @@ INSERT INTO Ingredientes (id, id_producto_stock, id_inventario, cantidades, unid
 (36, 10, 1, 0.20, 'kg', '2025-01-28 10:00:00');
 
 -- ====================================
--- Datos para la tabla Pagos
+-- Datos para la tabla payments
 -- ====================================
-INSERT INTO Pagos (id, id_stock, fecha_pago) VALUES
+INSERT INTO Payments (id, id_stock, fecha_pago) VALUES
 (1, 1, '2025-02-01 10:00:00'),
 (2, 2, '2025-02-02 12:30:00'),
 (3, 3, '2025-02-03 15:45:00'),

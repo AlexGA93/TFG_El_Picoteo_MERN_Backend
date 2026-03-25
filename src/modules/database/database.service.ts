@@ -26,10 +26,10 @@ export const insertMockDataService = async () => {
   const readedQueries = readSqlFile("../../core/db/Data_mockups.sql");
 
   const legacyAlterQueries: string[] = [
-    `ALTER TABLE Inventario ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
-    `ALTER TABLE Ingredientes ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0;`,
-    `ALTER TABLE Ingredientes ADD COLUMN unidad ENUM('kg', 'litros', 'unidad', 'metros', 'gramos') NOT NULL DEFAULT 'unidad';`,
-    `ALTER TABLE Ingredientes ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
+    `ALTER TABLE Inventory ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
+    `ALTER TABLE Ingredients ADD COLUMN cantidades FLOAT NOT NULL DEFAULT 0;`,
+    `ALTER TABLE Ingredients ADD COLUMN unidad ENUM('kg', 'litros', 'unidad', 'metros', 'gramos') NOT NULL DEFAULT 'unidad';`,
+    `ALTER TABLE Ingredients ADD COLUMN fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`,
   ];
 
   await executeSqlScript(createTablesQueries);
