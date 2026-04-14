@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from "express";
-import { database, users, auth } from "./core/routes";
+import { database, users, auth, menu } from "./core/routes";
 import cors from "cors";
 import path from "path";
 import { errorHandler } from "./core/middleware/error-handler.middleware";
@@ -20,10 +20,17 @@ app.use("/static", express.static(publicDir));
 app.get("/", (req: Request, res: Response) =>
   res.status(200).json({mssg:"Bienvenido a El Picoteo.sl"})
 );
+
+// rutas privadas
 app.use("/api/auth", auth);
 app.use("/api/users", users);
 app.use("/api/databases", database);
+
+// rutas publicas
+app.use("/api/public", menu);
+
 app.use((req: Request, res: Response) => sendError(res, constants.HTTP_STATUS.NOT_FOUND, "Ruta no encontrada"));
+
 app.use(errorHandler);
 
 export default app;

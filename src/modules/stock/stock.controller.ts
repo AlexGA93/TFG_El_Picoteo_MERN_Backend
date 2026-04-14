@@ -13,9 +13,26 @@ import { unlink } from "fs/promises";
 import path from "path";
 import { constants } from "../../core/utils/constants";
 
+const buildImageUrl = (req: Request, fileName?: string | null) => {
+  if (!fileName) return null;
+
+  return `${req.protocol}://${req.get("host")}/static/images/${fileName}`;
+};
+
+const serializeStockProduct = (req: Request, product: any) => {
+  const { url, ...productData } = product;
+
+  return {
+    ...productData,
+    imagen: buildImageUrl(req, url),
+  };
+};
+
 export const getAll = asyncHandler(async (req: Request, res: Response) => {
   const result = await getAllStockService();
-  return sendSuccess(res, constants.HTTP_STATUS.OK, result);
+  const products = result.map((product) => serializeStockProduct(req, product));
+
+  return sendSuccess(res, constants.HTTP_STATUS.OK, products);
 });
 
 export const getById = asyncHandler(async (req: Request, res: Response) => {
@@ -23,10 +40,7 @@ export const getById = asyncHandler(async (req: Request, res: Response) => {
   const result = await getStockByIdService(id);
   if (!result) throw new HttpError(404, "Producto no encontrado");
 
-  const responseProduct = {
-    ...result,
-    imagen: result.url ? `/static/images/${result.url}` : null,
-  };
+  const responseProduct = serializeStockProduct(req, result);
 
   return sendSuccess(res, constants.HTTP_STATUS.OK, [responseProduct]);
 });
@@ -62,22 +76,24 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
     );
 
   // mediante la url conformamos la direccion de guardado de la imagen
-  const imageUrl = req.file ? `/static/images/${req.file.filename}` : null;
   const resultPayload = {
     nombre_producto,
     precio_producto,
     tiempo_produccion_min,
     dificultad,
-    url: imageUrl ?? "",
+    url: req.file?.filename ?? "",
   };
 
   const result = await createStockService(resultPayload);
+  const createdProduct = await getStockByIdService(String(result.insertId));
 
   return sendSuccess(
     res,
     201,
-    { productId: result.insertId },
-    "Producto creado exitosamente " + imageUrl,
+    createdProduct
+      ? serializeStockProduct(req, createdProduct)
+      : { productId: result.insertId },
+    "Producto creado exitosamente",
   );
 });
 
@@ -88,9 +104,14 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     precio_producto,
     tiempo_produccion_min,
     dificultad,
-    url,
   } = req.body;
-  const imageUrl = req.file ? `/static/images/${req.file.filename}` : null;
+  const currentProduct = await getStockByIdService(id);
+
+  if (!currentProduct)
+    throw new HttpError(
+      constants.HTTP_STATUS.NOT_FOUND,
+      "Producto no encontrado",
+    );
 
   await updateStockService({
     id,
@@ -98,12 +119,14 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     precio_producto,
     tiempo_produccion_min,
     dificultad,
-    url: imageUrl ?? "",
+    url: req.file?.filename ?? currentProduct.url,
   });
+  const updatedProduct = await getStockByIdService(id);
+
   return sendSuccess(
     res,
     constants.HTTP_STATUS.OK,
-    null,
+    updatedProduct ? serializeStockProduct(req, updatedProduct) : null,
     "Producto actualizado exitosamente",
   );
 });
@@ -139,7 +162,7 @@ export const remove = asyncHandler(async (req: Request, res: Response) => {
       const filePath = path.join(
         process.cwd(),
         "public",
-        "uploads",
+        "images",
         productImageName,
       );
       await unlink(filePath);
