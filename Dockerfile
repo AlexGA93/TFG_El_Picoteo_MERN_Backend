@@ -1,5 +1,8 @@
 # Define image and version
-FROM node:20
+# FROM node:20
+
+# Use the latest Node.js 22 image from the mirror registry
+FROM mirror.gcr.io/library/node:22-bookworm-slim
 
 RUN mkdir -p /home/app
 

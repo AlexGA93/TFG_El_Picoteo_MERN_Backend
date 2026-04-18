@@ -1,6 +1,8 @@
 # Define image and version
-FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim
+# FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim
 
+# Use the latest Node.js 22 image from the mirror registry
+FROM mirror.gcr.io/library/node:22-bookworm-slim
  
 # Configure npm retries/timeouts to make container builds more resilient
 RUN npm config set fund false \
