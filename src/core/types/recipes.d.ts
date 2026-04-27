@@ -4,6 +4,7 @@ export type RecipeRow = {
   precio_producto: number;
   tiempo_produccion_min: number;
   dificultad: "facil" | "media" | "dificil";
+  url: string | null;
   ingrediente_id: number | null;
   id_inventory: number | null;
   ingrediente_nombre: string | null;
@@ -22,6 +23,7 @@ export interface RecipesIngredients {
   cantidad: number;
   unidad: string;
 }
+
 export interface RecipesData {
   id: number;
   nombre: string;
@@ -29,4 +31,20 @@ export interface RecipesData {
   tiempo_produccion_min: number;
   dificultad: string;
   ingredients: RecipesIngredients[];
+  url?: string;
 }
+
+export interface RecipeIngredientToCreate {
+  id_inventory: number;
+  cantidad: number;
+  unidad: string;
+}
+
+export type RecipeToBeCreated = {
+  nombre: string;
+  precio: number;
+  tiempo_produccion_min: number;
+  dificultad: string;
+  url: string;
+  ingredients: RecipeIngredientToCreate[];
+};

@@ -32,6 +32,8 @@ export const constants = {
         INSERT_PRODUCT: `INSERT INTO Inventory(nombre, tipo, unidades, n_unidades, proveedor, precio_unidad, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, NOW());`,
         UPDATE_PRODUCT: `UPDATE Inventory SET tipo=?, unidades=?, n_unidades=?, proveedor=?, precio_unidad=? WHERE nombre=?;`,
         DELETE_PRODUCT: `DELETE FROM Inventory WHERE id=?;`,
+        DECREMENT_UNITS: `UPDATE Inventory SET n_unidades = n_unidades - ? WHERE id = ?;`,
+        INCREMENT_UNITS: `UPDATE Inventory SET n_unidades = n_unidades + ? WHERE id = ?;`,
       },
       STOCK: {
         GET_ALL: `SELECT * FROM Stock;`,
@@ -48,6 +50,7 @@ VALUES (?, ?, ?, ?, ?);
         INSERT_INGREDIENT: `INSERT INTO Ingredients(id_producto_stock, id_inventory, cantidades, unidad, fecha_registro) VALUES (?, ?, ?, ?, NOW());`,
         UPDATE_INGREDIENT: `UPDATE Ingredients SET id_producto_stock=?, id_inventory=?, cantidades=?, unidad=? WHERE id=?;`,
         DELETE_INGREDIENT: `DELETE FROM Ingredients WHERE id=?;`,
+        DELETE_BY_STOCK_ID: `DELETE FROM Ingredients WHERE id_producto_stock=?;`,
       },
       payments: {
         GET_ALL: `SELECT * FROM Payments;`,
@@ -57,22 +60,26 @@ VALUES (?, ?, ?, ?, ?);
         DELETE_PAYMENT: `DELETE FROM Payments WHERE id=?;`,
       },
       recipes: {
-        GET_ALL_RECIPES: `SELECT
-      s.id,
-      s.nombre_producto,
-      s.precio_producto,
-      s.tiempo_produccion_min,
-      s.dificultad,
-      ing.id AS ingrediente_id,
-      inv.id AS id_inventory,
-      inv.nombre AS ingrediente_nombre,
-      inv.tipo AS ingrediente_tipo,
-      ing.cantidades AS cantidad,
-      ing.unidad
-    FROM Stock s
-    LEFT JOIN Ingredients ing ON ing.id_producto_stock = s.id
-    LEFT JOIN Inventory inv ON inv.id = ing.id_inventory
-    ORDER BY s.id ASC, ing.id ASC;`,
+        GET_ALL_RECIPES: `
+        SELECT
+          s.id,
+          s.nombre_producto,
+          s.precio_producto,
+          s.tiempo_produccion_min,
+          s.dificultad,
+          s.url,
+          ing.id AS ingrediente_id,
+          inv.id AS id_inventory,
+          inv.nombre AS ingrediente_nombre,
+          inv.tipo AS ingrediente_tipo,
+          ing.cantidades AS cantidad,
+          ing.unidad
+          FROM Stock s
+          LEFT JOIN Ingredients ing ON ing.id_producto_stock = s.id
+          LEFT JOIN Inventory inv ON inv.id = ing.id_inventory
+          ORDER BY s.id ASC, ing.id ASC;`,
+        CREATE_RECIPE: `INSERT INTO Stock(nombre_producto, precio_producto, tiempo_produccion_min, dificultad, url)
+  VALUES (?, ?, ?, ?, ?);`,
       },
       GET_GLOBAL_TABLES: `SHOW TABLES;`,
       GET_ALL_DATABASES: `SHOW DATABASES;`,
