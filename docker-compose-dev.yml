@@ -17,8 +17,8 @@ services:
 
   # MySQL container named as 'mysqldb'
   mysqldb:
-    # MySQL image
-    image: mirror.gcr.io/library/mysql:8.0.45
+    # MySQL image from the mirror registry
+    image: mirror.gcr.io/library/mysql:8.0-debian
     # environment variables from .env file
     env_file:
       - ./.env
