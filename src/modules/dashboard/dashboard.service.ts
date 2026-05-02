@@ -3,6 +3,7 @@ import {
   getRecipesSample,
   getStockSample,
   getInventoryRows,
+  getIngredientsRows,
   getSalesPeriods,
   getExpensePeriods,
 } from "./dashboard.model";
@@ -10,10 +11,11 @@ import {
 export const buildDashboardData = async () => {
   const limit = 6;
 
-  const [recipes, stock, inventoryRows, ventas, gastos] = await Promise.all([
+  const [recipes, stock, inventoryRows, ingredients, ventas, gastos] = await Promise.all([
     getRecipesSample(limit),
     getStockSample(limit),
     getInventoryRows(),
+    getIngredientsRows(),
     getSalesPeriods(),
     getExpensePeriods(),
   ]);
@@ -47,11 +49,12 @@ export const buildDashboardData = async () => {
     ...g,
     totalPrice: Number(g.totalPrice.toFixed(2)),
   }));
-
+  
   return {
     recipes,
     stock,
     inventory,
+    ingredients,
     ventas,
     gastos,
   };

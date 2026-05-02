@@ -2,6 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
 import { Inventory, QueryParams } from "../../core/types/inventory";
+import { log } from "node:console";
 
 
 
@@ -44,15 +45,26 @@ export const createinventory = (payload: Inventory) => {
 };
 
 export const updateinventory = (payload: Inventory) => {
+  console.log([
+  payload.nombre,
+  payload.tipo,
+  payload.unidades,
+  payload.n_unidades,
+  payload.proveedor,
+  payload.precio_unidad,
+  payload.id
+]);
+  
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
     [
+      payload.nombre,
       payload.tipo,
       payload.unidades,
       payload.n_unidades,
       payload.proveedor,
       payload.precio_unidad,
-      payload.nombre,
+      payload.id!
     ]
   );
 };

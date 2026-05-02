@@ -1,0 +1,792 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1709042120192
+  modified: 1709042120192
+  description: ""
+collection:
+  - name: TFG El Picoteo .sl
+    meta:
+      id: fld_6fce03869c5e4088afb3739dca110cdc
+      created: 1711729916671
+      modified: 1774503019613
+      sortKey: -1711729916672
+      description: ""
+    children:
+      - url: "{{ _.base_url }}"
+        name: MAIN  ROUTE
+        meta:
+          id: req_ca5434a7a4d9461ba3fbe9446a219418
+          created: 1711729942127
+          modified: 1711730458070
+          isPrivate: false
+          description: ""
+          sortKey: -1711730005131
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/8.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - name: Tables
+        meta:
+          id: fld_30b27d7351754493bf91369f0819898b
+          created: 1711904625212
+          modified: 1711904625212
+          sortKey: -1711904625212
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/{{ _.databases }}/inventario"
+            name: Get Inventory
+            meta:
+              id: req_2c7c8153fb70488f90bc40fc11d914df
+              created: 1711906690373
+              modified: 1774174134700
+              isPrivate: false
+              description: ""
+              sortKey: -1711906690373
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/8.6.1
+              - name: x-auth-token
+                value: "{{ _.user2LoginToken }}"
+                description: ""
+                disabled: false
+              - name: x-auth-token
+                value: "{{ _.user1LoginToken }}"
+                description: ""
+                disabled: true
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.base_url }}/{{ _.databases }}/store"
+            name: Get Products
+            meta:
+              id: req_ce178466f8ba47db8358722e382920aa
+              created: 1715440278485
+              modified: 1723475365583
+              isPrivate: false
+              description: ""
+              sortKey: -1715440278485
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/8.6.1
+              - name: x-auth-token
+                value: "{{ _.user2LoginToken }}"
+                description: ""
+                disabled: true
+              - name: x-auth-token
+                value: "{{ _.user1LoginToken }}"
+                description: ""
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - name: Admin Routes
+            meta:
+              id: fld_467f6696202a4faeb443f6031922555c
+              created: 1723474695479
+              modified: 1774503154854
+              sortKey: -1774455441012
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.databases }}/create-tables"
+                name: create tables
+                meta:
+                  id: req_8899950101724a459b14d62dc6b44268
+                  created: 1711904701830
+                  modified: 1723474707302
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1723474707273
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}"
+                name: Get Databases
+                meta:
+                  id: req_5a53a881415b4b85aa271be1ba4ce51e
+                  created: 1723474576367
+                  modified: 1723474710401
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1723474707373
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/9.2.0
+                  - name: x-auth-token
+                    value: "{{ _.user1LoginToken }}"
+                    description: ""
+                    disabled: true
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/mockup-insertion"
+                name: GET MOCKUPS
+                meta:
+                  id: req_f39c4e184b654d6a9d7e7b36b8560c46
+                  created: 1770624685872
+                  modified: 1772940862975
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1770624685872
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.3.0
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Stock
+            meta:
+              id: fld_db3387f371134ea4acc81e4a1c6a721b
+              created: 1774455440912
+              modified: 1777216209422
+              sortKey: -1774455440912
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.databases }}/stock"
+                name: Get All Stock
+                meta:
+                  id: req_38a125ce7ba249c98e53264fa3cff83f
+                  created: 1774170568922
+                  modified: 1774458006565
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1774455460582
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.3.1
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/stock"
+                name: Post Stock
+                meta:
+                  id: req_91daafd5e1f34bbab9eea9cb71f79e62
+                  created: 1774450636781
+                  modified: 1774463261691
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1774455460482
+                method: POST
+                body:
+                  mimeType: multipart/form-data
+                  params:
+                    - name: nombre_producto
+                      value: Teclado
+                      description: ""
+                      disabled: false
+                    - name: precio_producto
+                      value: "999.99"
+                      description: ""
+                      disabled: false
+                    - name: dificultad
+                      value: dificil
+                      description: ""
+                      disabled: false
+                    - name: imagen
+                      value: ""
+                      description: ""
+                      disabled: false
+                      fileName: /home/elros/.config/hypr/wallpapers/keyboard_pink.png
+                      type: file
+                    - name: tiempo_produccion_min
+                      value: "1000"
+                      description: ""
+                      disabled: false
+                headers:
+                  - name: Content-Type
+                    value: multipart/form-data
+                    disabled: false
+                  - name: User-Agent
+                    value: insomnia/12.3.1
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/stock/10"
+                name: Get Stock By Id
+                meta:
+                  id: req_236eb61348884744b1d4727800dc7cbb
+                  created: 1774458016668
+                  modified: 1774503558394
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1774455460532
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.3.1
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/stock/2"
+                name: Put Stock
+                meta:
+                  id: req_324183bf5030436cbb2dca2e882847de
+                  created: 1774458116165
+                  modified: 1774458872967
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1773339095631.5
+                method: PUT
+                body:
+                  mimeType: multipart/form-data
+                  params:
+                    - name: nombre_producto
+                      value: prueba (editada)
+                      description: ""
+                      disabled: false
+                    - name: precio_producto
+                      value: "2.99"
+                      description: ""
+                      disabled: false
+                    - name: dificultad
+                      value: Media
+                      description: ""
+                      disabled: false
+                    - name: tiempo_produccion_min
+                      value: "3.99"
+                      description: ""
+                      disabled: false
+                    - name: imagen
+                      value: ""
+                      description: ""
+                      disabled: false
+                      fileName: /home/elros/.config/hypr/wallpapers/keyboard_pink.png
+                      type: file
+                headers:
+                  - name: Content-Type
+                    value: multipart/form-data
+                    disabled: false
+                  - name: User-Agent
+                    value: insomnia/12.3.1
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/stock/1"
+                name: Delete Stock By Id
+                meta:
+                  id: req_ac449d8d65da41dfbcbfeaa24515ab2d
+                  created: 1774459208317
+                  modified: 1774459213074
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1774455460507
+                method: DELETE
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.3.1
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Menu
+            meta:
+              id: fld_824e1a2066a1451293648aebb578b8cc
+              created: 1776172188046
+              modified: 1776172188046
+              sortKey: -1776172188046
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.public }}/menu"
+                name: New Request
+                meta:
+                  id: req_0b01f936a0874823a3b21cc7b74745cb
+                  created: 1776172198579
+                  modified: 1776172412354
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1776172198579
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.5.0
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Recipes
+            meta:
+              id: fld_0e7cad6e860747629dd140bf40b59367
+              created: 1777216215756
+              modified: 1777216215756
+              sortKey: -1777216215756
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.databases }}/recipes"
+                name: Get All Recipes
+                meta:
+                  id: req_a5d5ba1c3f924ad1958cc82e96bb8742
+                  created: 1777216236647
+                  modified: 1777216530521
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1777216236647
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.5.0
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.databases }}/recipes/1"
+                name: Get Recipe By Id
+                meta:
+                  id: req_b72404744a0d4cef837db9a191e3f2fb
+                  created: 1777216541799
+                  modified: 1777216550012
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1776694217613
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/12.5.0
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: ""
+                name: Create a new Recipe
+                meta:
+                  id: req_d3aedd47e28b4df783c432e34806c595
+                  created: 1777217673877
+                  modified: 1777282292198
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1777217673877
+                method: POST
+                body:
+                  mimeType: multipart/form-data
+                  params:
+                    - name: nombre
+                      value: prueba
+                      description: ""
+                      disabled: false
+                    - name: precio
+                      value: "9.99"
+                      description: ""
+                      disabled: false
+                    - name: tiempo_produccion_min
+                      value: "60"
+                      description: ""
+                      disabled: false
+                    - name: dificultad
+                      value: media
+                      description: ""
+                      disabled: false
+                    - name: ingredients
+                      value: ""
+                      description: ""
+                      disabled: false
+                    - name: url
+                      value: ""
+                      description: ""
+                      disabled: false
+                      type: file
+                headers:
+                  - name: Content-Type
+                    value: multipart/form-data
+                  - name: User-Agent
+                    value: insomnia/12.5.0
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: false
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+      - name: Authentication
+        meta:
+          id: fld_4154418eb3cf4d31b2a057243371fd02
+          created: 1774503038605
+          modified: 1774503038605
+          sortKey: -1774503038605
+          description: ""
+        children:
+          - name: Register
+            meta:
+              id: fld_4aaaa2d769fc4f0181f173d3350c7d27
+              created: 1711729989907
+              modified: 1774503061201
+              sortKey: -1774503050567
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.auth }}/register"
+                name: "Register User #1 - Employee"
+                meta:
+                  id: req_1bcd5b06d9d34fd78e46607174e69441
+                  created: 1711730284188
+                  modified: 1774503087019
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1711730284188
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                    	"nombre":"Jane",
+                    	"apellidos": "Doe",
+                    	"email":"janeDoe@elpicoteo.com",
+                    	"password":"92johnDOE4ever",
+                    	"rol_usuario":"employee"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.auth }}/register"
+                name: "Register User #2 - Admin"
+                meta:
+                  id: req_742d08b9489740ac9e3149f1e4d08e4d
+                  created: 1711730600197
+                  modified: 1774503080103
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1711730144659.5
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                    	"nombre":"John",
+                    	"apellidos": "Doe",
+                    	"email":"johnDoe@elpicoteo.com",
+                    	"password":"92johnDOE4ever",
+                    	"rol_usuario":"admin"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: VerifyToken
+            meta:
+              id: fld_986695f168924ea3997c710f246a0253
+              created: 1711788257380
+              modified: 1774503118267
+              sortKey: -1774503050667
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.auth }}/validate"
+                name: New Request
+                meta:
+                  id: req_2cdaf5a5529b47e9a0d7718db80665fa
+                  created: 1711788264542
+                  modified: 1723472592420
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1711788264542
+                method: GET
+                headers:
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                  - name: x-auth-token
+                    value: "{{ _.user1LoginToken }}"
+                    description: ""
+                    disabled: false
+                  - name: x-auth-token
+                    value: "{{ _.user2LoginToken }}"
+                    description: ""
+                    disabled: true
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+          - name: Login
+            meta:
+              id: fld_03642a60eeb945adab0310e343cde953
+              created: 1711788432553
+              modified: 1774503050508
+              sortKey: -1774503050467
+              description: ""
+            children:
+              - url: "{{ _.base_url }}/{{ _.auth }}/login"
+                name: "Login User #1 - Employee"
+                meta:
+                  id: req_29251cfbb54a4349a85981658c0d722f
+                  created: 1711788448202
+                  modified: 1774503097096
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1711788448202
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                    	"email":"janeDoe@elpicoteo.com",
+                    	"password": "92johnDOE4ever"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                  - name: Access-Control-Allow-Credentials
+                    value: "true"
+                    description: ""
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+              - url: "{{ _.base_url }}/{{ _.auth }}/login"
+                name: "Login User #2 - Admin"
+                meta:
+                  id: req_27172ffa60b841eeb5d521a61eba39f4
+                  created: 1711788997054
+                  modified: 1774503105477
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1711788356372
+                method: POST
+                body:
+                  mimeType: application/json
+                  text: |-
+                    {
+                    	"email":"johnDoe@elpicoteo.com",
+                    	"password": "92johnDOE4ever"
+                    }
+                headers:
+                  - name: Content-Type
+                    value: application/json
+                  - name: User-Agent
+                    value: insomnia/8.6.1
+                  - name: Access-Control-Allow-Credentials
+                    value: "true"
+                    description: ""
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
+  - name: SOCIAL-MEDIA-NESTJS
+    meta:
+      id: fld_b676ee3235274b5b9fe52e0bc1fae582
+      created: 1728757592081
+      modified: 1728757592081
+      sortKey: -1728757592081
+      description: ""
+  - name: Gyphy
+    meta:
+      id: fld_8267f1427d80426e84c8da9878e48461
+      created: 1733311459921
+      modified: 1733311465822
+      sortKey: -1733311459921
+      description: ""
+  - name: CountryApp - spa
+    meta:
+      id: fld_3723b1dd79c14309bf7af08310a9b8db
+      created: 1734948016114
+      modified: 1734948016114
+      sortKey: -1734948016114
+      description: ""
+  - name: Registro Literario
+    meta:
+      id: fld_0cc74428b34a464c92d1322540b312e7
+      created: 1772222727320
+      modified: 1772222727320
+      sortKey: -1772222727320
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1711729488349
+    modified: 1711729488349
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1711729488348
+    modified: 1711730327171
+    isPrivate: false
+  subEnvironments:
+    - name: New Environment
+      meta:
+        id: env_9c47a1042ecf41d7b4735342aa62bb7e
+        created: 1711730351389
+        modified: 1776172287908
+        isPrivate: true
+        sortKey: 1711730351389
+      data:
+        base_url: http://localhost:5000
+        auth: api/auth
+        users: api/users
+        databases: api/databases
+        public: api/public
+        user1LoginToken: "{% response 'body', 'req_29251cfbb54a4349a85981658c0d722f',
+          'b64::JC5kYXRhLnRva2Vu::46b', 'never', 60 %}"
+        user2LoginToken: "{% response 'body', 'req_27172ffa60b841eeb5d521a61eba39f4',
+          'b64::JC5kYXRhLnRva2Vu::46b', 'never', 60 %} "

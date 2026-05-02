@@ -50,6 +50,7 @@ VALUES (?, ?, ?, ?, ?);
         INSERT_INGREDIENT: `INSERT INTO Ingredients(id_producto_stock, id_inventory, cantidades, unidad, fecha_registro) VALUES (?, ?, ?, ?, NOW());`,
         UPDATE_INGREDIENT: `UPDATE Ingredients SET id_producto_stock=?, id_inventory=?, cantidades=?, unidad=? WHERE id=?;`,
         DELETE_INGREDIENT: `DELETE FROM Ingredients WHERE id=?;`,
+        DELETE_INGREDIENT_BY_ID_INVENTORY: `DELETE FROM Ingredients WHERE id_inventory = ?;`,
         DELETE_BY_STOCK_ID: `DELETE FROM Ingredients WHERE id_producto_stock=?;`,
       },
       payments: {

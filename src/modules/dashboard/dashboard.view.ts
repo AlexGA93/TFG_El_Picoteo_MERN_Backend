@@ -6,6 +6,7 @@ export const dashboardView = (data: DashboardResponse) => {
     recipes: data.recipes,
     stock: data.stock,
     inventory: data.inventory,
+    ingredients: data.ingredients,
     ventas: data.ventas,
     gastos: data.gastos,
   };

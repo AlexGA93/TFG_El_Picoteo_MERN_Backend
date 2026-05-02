@@ -9,6 +9,8 @@ import dashboardRoutes from "../dashboard/dashboard.routes";
 import recipesRoutes from "../recipes/recipes.routes";
 import stockRoutes from "../stock/stock.routes";
 import inventoryRoutes from "../inventory/inventory.routes";
+import ingredientsRoute from "../ingredients/ingredients.routes";
+
 const router: Router = Router();
 
 /**
@@ -30,5 +32,6 @@ router.use("/dashboard", authenticationByBoth, dashboardRoutes);
 router.use("/recipes", authenticationByBoth, recipesRoutes);
 router.use("/stock", authenticationByBoth, stockRoutes);
 router.use("/inventory", authenticationByBoth, inventoryRoutes);
+router.use("/ingredients", authenticationByBoth, ingredientsRoute);
 
 export default router;
