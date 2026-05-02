@@ -58,3 +58,10 @@ export const deleteIngrediente = (id: string) => {
     [id]
   );
 };
+
+export const deleteIngredientByIdInventory = (id: string) => {
+  return queryAsync<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.ingredients.DELETE_INGREDIENT_BY_ID_INVENTORY,
+    [id]
+  );
+};

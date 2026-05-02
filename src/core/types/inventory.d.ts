@@ -1,7 +1,7 @@
 export type QueryParams = Array<string | number | boolean | Date | null>;
 
 export interface Inventory {
-    id?: string;
+  id?: number;
   nombre: string;
   tipo: string;
   unidades: string;

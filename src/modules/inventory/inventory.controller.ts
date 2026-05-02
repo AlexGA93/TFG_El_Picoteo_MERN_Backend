@@ -10,6 +10,8 @@ import { asyncHandler } from "../../core/utils/async-handler";
 import { HttpError } from "../../core/utils/http-error";
 import { sendSuccess } from "../../core/views/api-response.view";
 import { constants } from "../../core/utils/constants";
+import { deleteIngrediente } from "../ingredients/ingredients.model";
+import { deleteIngredientByIdInventoryService, deleteingredientservice } from "../ingredients/ingredients.service";
 
 export const getAll = asyncHandler(async (req: Request, res: Response) => {
   const result = await getAllinventoryService();
@@ -24,7 +26,16 @@ export const getById = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const create = asyncHandler(async (req: Request, res: Response) => {
-  const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
+  console.log("req.body:", req.body);
+  
+  const { 
+    nombre,
+    tipo,
+    unidades,
+    n_unidades,
+    proveedor,
+    precio_unidad,
+   } = req.body;
   const result = await createinventoryService({
     nombre,
     tipo,
@@ -33,14 +44,19 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
     proveedor,
     precio_unidad,
   });
-  return sendSuccess(res, 201, { productId: result.insertId }, "Producto creado exitosamente");
+
+  if (result.affectedRows === 0) {
+    throw new HttpError(constants.HTTP_STATUS.INTERNAL_SERVER_ERROR, "Error al crear el producto"); // formato de error: {statusCode: number, message: string, details?: unknown}
+  }
+
+  return sendSuccess(res, 201, { productId: result.insertId }, "Producto creado exitosamente"); // formato de respuesta: {statusCode: number, data: unknown, message: string}
 });
 
 export const update = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
   await updateinventoryService({
-    id,
+    id: parseInt(id),
     nombre,
     tipo,
     unidades,
@@ -53,6 +69,18 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
 
 export const remove = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
+
+  /**
+   * 1. Eliminamos todas las relaciones en Ingredients
+   * (no una, sino todas las que usen ese inventory)
+   */
+  await deleteIngredientByIdInventoryService(id);
+
+  /**
+   * 2. Eliminamos el item de Inventory
+   */
   await deleteinventoryService(id);
+
+  
   return sendSuccess(res, constants.HTTP_STATUS.OK, null, "Producto eliminado exitosamente");
 });

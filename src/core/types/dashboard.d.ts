@@ -15,6 +15,7 @@ export type DashboardResponse = {
   recipes: unknown;
   stock: unknown;
   inventory: unknown;
+  ingredients: unknown;
   ventas: unknown;
   gastos: unknown;
 };

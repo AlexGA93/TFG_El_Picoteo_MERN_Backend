@@ -125,3 +125,24 @@ export const getExpensePeriods = () => {
   `;
   return queryAsync<RowDataPacket[]>(sql);
 };
+
+
+export const getIngredientsRows = () => {
+    const sql = `
+    SELECT 
+      i.id,
+      i.id_producto_stock,
+      s.nombre_producto AS producto,
+      i.id_inventory,
+      inv.nombre AS ingrediente,
+      inv.tipo,
+      i.cantidades,
+      i.unidad,
+      i.fecha_registro
+    FROM Ingredients i
+    INNER JOIN Inventory inv ON i.id_inventory = inv.id
+    INNER JOIN Stock s ON i.id_producto_stock = s.id
+    ORDER BY i.fecha_registro DESC;
+  `;
+  return queryAsync<RowDataPacket[]>(sql);
+};
