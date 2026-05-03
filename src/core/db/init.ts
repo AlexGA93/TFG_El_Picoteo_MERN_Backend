@@ -17,13 +17,35 @@ export const ensureDatabaseAndTables = async (): Promise<void> => {
     );
   }
 
-  const connection = await mysql.createConnection({
-    host,
-    user: "root",
-    password,
-    port,
-    multipleStatements: true,
-  });
+  const createConnectionWithRetry = async (maxRetries = 10, delayMs = 2000) => {
+    let currentAttempt = 0;
+    let lastError: unknown;
+
+    while (currentAttempt < maxRetries) {
+      try {
+        return await mysql.createConnection({
+          host,
+          user: "root",
+          password,
+          port,
+          multipleStatements: true,
+        });
+      } catch (error) {
+        lastError = error;
+        currentAttempt += 1;
+
+        const code = (error as { code?: string })?.code;
+        const isRetryable = code === "ENOTFOUND" || code === "ECONNREFUSED";
+        if (!isRetryable || currentAttempt >= maxRetries) break;
+
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+    }
+
+    throw lastError;
+  };
+
+  const connection = await createConnectionWithRetry();
 
   try {
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\``);

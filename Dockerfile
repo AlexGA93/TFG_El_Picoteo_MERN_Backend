@@ -9,7 +9,7 @@ RUN mkdir -p /home/app
 # We're going to define our code inside a folder inside the docker container
 WORKDIR /home/app
 # We need to copy our package.json inside the current folder
-COPY package*.json .
+COPY package*.json ./
 # Run the command to install our package.json dependencies
 RUN npm ci
 # Copy all of the content inside the container's folder
