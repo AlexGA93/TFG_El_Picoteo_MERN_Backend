@@ -2,6 +2,7 @@ import { Purchase } from "../../core/types/purchases";
 import {
   createPurchase,
   deletePurchase,
+  deletePurchaseItemsByInventoryId,
   deletePurchaseItemsByPurchaseId,
   getAllPurchases,
   getPurchaseById,
@@ -16,3 +17,5 @@ export const deletePurchaseService = async (id: string) => {
   await deletePurchaseItemsByPurchaseId(id);
   return deletePurchase(id);
 };
+export const deletePurchaseItemsByInventoryIdService = (idInventory: string) =>
+  deletePurchaseItemsByInventoryId(idInventory);

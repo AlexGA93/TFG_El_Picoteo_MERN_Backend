@@ -1,7 +1,8 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { PoolConnection } from "mysql2/promise";
 import mysqlPool from "../../core/db/db";
 import { constants } from "../../core/utils/constants";
-import { QueryParams, Sale } from "../../core/types/sales";
+import { QueryParams, Sale, SaleItem } from "../../core/types/sales";
 
 const queryAsync = <T = RowDataPacket[]>(
   sql: string,
@@ -39,6 +40,29 @@ export const createSale = (payload: Sale) =>
     constants.SQL_QUERIES.DATABASE.sales.INSERT_SALE,
     [payload.fecha_venta, payload.metodo_pago, payload.id_usuario, payload.total_venta]
   );
+
+export const createSaleWithConn = async (
+  connection: PoolConnection,
+  payload: Sale
+) => {
+  const [result] = await connection.query<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.sales.INSERT_SALE,
+    [payload.fecha_venta, payload.metodo_pago, payload.id_usuario, payload.total_venta]
+  );
+  return result;
+};
+
+export const createSaleItemWithConn = async (
+  connection: PoolConnection,
+  saleId: number,
+  item: SaleItem
+) => {
+  const [result] = await connection.query<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.sales.INSERT_SALE_ITEM,
+    [saleId, item.id_stock, item.cantidad, item.precio_unitario, item.subtotal]
+  );
+  return result;
+};
 
 export const updateSale = (id: string, payload: Sale) =>
   queryAsync<ResultSetHeader>(

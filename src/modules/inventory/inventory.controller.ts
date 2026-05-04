@@ -10,8 +10,8 @@ import { asyncHandler } from "../../core/utils/async-handler";
 import { HttpError } from "../../core/utils/http-error";
 import { sendSuccess } from "../../core/views/api-response.view";
 import { constants } from "../../core/utils/constants";
-import { deleteIngrediente } from "../ingredients/ingredients.model";
-import { deleteIngredientByIdInventoryService, deleteingredientservice } from "../ingredients/ingredients.service";
+import { deleteIngredientByIdInventoryService } from "../ingredients/ingredients.service";
+import { deletePurchaseItemsByInventoryIdService } from "../purchases/purchases.service";
 
 export const getAll = asyncHandler(async (req: Request, res: Response) => {
   const result = await getAllinventoryService();
@@ -69,18 +69,18 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
 
 export const remove = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
+  console.log({id});
 
   /**
-   * 1. Eliminamos todas las relaciones en Ingredients
-   * (no una, sino todas las que usen ese inventory)
+   * 1. Eliminamos las relaciones en Ingredients y Purchase_Items
+   * (todas las que usen ese inventory)
    */
   await deleteIngredientByIdInventoryService(id);
+  await deletePurchaseItemsByInventoryIdService(id);
 
   /**
    * 2. Eliminamos el item de Inventory
    */
   await deleteinventoryService(id);
-
-  
   return sendSuccess(res, constants.HTTP_STATUS.OK, null, "Producto eliminado exitosamente");
 });

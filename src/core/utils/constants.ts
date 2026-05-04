@@ -67,6 +67,7 @@ VALUES (?, ?, ?, ?, ?);
         GET_BY_ID: `SELECT * FROM Sales WHERE id=?;`,
         GET_ITEMS_BY_SALE_ID: `SELECT * FROM Sale_Items WHERE id_sale=? ORDER BY id ASC;`,
         INSERT_SALE: `INSERT INTO Sales(fecha_venta, metodo_pago, id_usuario, total_venta) VALUES (?, ?, ?, ?);`,
+        INSERT_SALE_ITEM: `INSERT INTO Sale_Items(id_sale, id_stock, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?);`,
         UPDATE_SALE: `UPDATE Sales SET fecha_venta=?, metodo_pago=?, id_usuario=?, total_venta=? WHERE id=?;`,
         DELETE_SALE_ITEMS_BY_SALE_ID: `DELETE FROM Sale_Items WHERE id_sale=?;`,
         DELETE_SALE: `DELETE FROM Sales WHERE id=?;`,
@@ -85,6 +86,7 @@ VALUES (?, ?, ?, ?, ?);
         INSERT_PURCHASE: `INSERT INTO Purchases(fecha_compra, proveedor, id_usuario, total_compra) VALUES (?, ?, ?, ?);`,
         UPDATE_PURCHASE: `UPDATE Purchases SET fecha_compra=?, proveedor=?, id_usuario=?, total_compra=? WHERE id=?;`,
         DELETE_PURCHASE_ITEMS_BY_PURCHASE_ID: `DELETE FROM Purchase_Items WHERE id_purchase=?;`,
+        DELETE_PURCHASE_ITEMS_BY_INVENTORY_ID: `DELETE FROM Purchase_Items WHERE id_inventory=?;`,
         DELETE_PURCHASE: `DELETE FROM Purchases WHERE id=?;`,
       },
       recipes: {

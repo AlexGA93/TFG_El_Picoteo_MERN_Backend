@@ -52,6 +52,12 @@ export const deletePurchaseItemsByPurchaseId = (id: string) =>
     [id]
   );
 
+export const deletePurchaseItemsByInventoryId = (idInventory: string) =>
+  queryAsync<ResultSetHeader>(
+    constants.SQL_QUERIES.DATABASE.purchases.DELETE_PURCHASE_ITEMS_BY_INVENTORY_ID,
+    [idInventory]
+  );
+
 export const deletePurchase = (id: string) =>
   queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.purchases.DELETE_PURCHASE,

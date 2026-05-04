@@ -7,3 +7,14 @@ export interface Sale {
   id_usuario: number;
   total_venta: number;
 }
+
+export interface SaleItem {
+  id_stock: number;
+  cantidad: number;
+  precio_unitario: number;
+  subtotal: number;
+}
+
+export interface SaleCreatePayload extends Sale {
+  items?: SaleItem[];
+}
