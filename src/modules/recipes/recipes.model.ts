@@ -118,3 +118,11 @@ export const deleteStockRow = (connection: PoolConnection, stockId: number) => {
   const sql = constants.SQL_QUERIES.DATABASE.STOCK.DELETE_STOCK_PRODUCT;
   return queryAsyncWithConn<ResultSetHeader>(connection, sql, [stockId]);
 };
+
+export const deleteSaleItemsByStockId = (
+  connection: PoolConnection,
+  stockId: number,
+) => {
+  const sql = constants.SQL_QUERIES.DATABASE.sales.DELETE_SALE_ITEMS_BY_STOCK_ID;
+  return queryAsyncWithConn<ResultSetHeader>(connection, sql, [stockId]);
+};
