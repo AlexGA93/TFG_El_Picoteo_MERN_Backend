@@ -6,6 +6,7 @@ import {
   createStockRow,
   decrementInventoryUnits,
   deleteIngredientsByStockId,
+  deleteSaleItemsByStockId,
   deleteStockRow,
   getInventoryById,
   getRecipesRows,
@@ -247,6 +248,7 @@ export const deleteRecipeData = async (id: string) => {
       }
     }
 
+    await deleteSaleItemsByStockId(connection, Number(id));
     await deleteIngredientsByStockId(connection, Number(id));
     await deleteStockRow(connection, Number(id));
 

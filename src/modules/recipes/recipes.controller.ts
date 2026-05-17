@@ -236,6 +236,7 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
 export const remove = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const deleted = await deleteRecipeData(id);
+  
 
   if (!deleted) {
     return sendSuccess(

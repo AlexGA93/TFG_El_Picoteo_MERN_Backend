@@ -70,6 +70,7 @@ VALUES (?, ?, ?, ?, ?);
         INSERT_SALE_ITEM: `INSERT INTO Sale_Items(id_sale, id_stock, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?);`,
         UPDATE_SALE: `UPDATE Sales SET fecha_venta=?, metodo_pago=?, id_usuario=?, total_venta=? WHERE id=?;`,
         DELETE_SALE_ITEMS_BY_SALE_ID: `DELETE FROM Sale_Items WHERE id_sale=?;`,
+        DELETE_SALE_ITEMS_BY_STOCK_ID: `DELETE FROM Sale_Items WHERE id_stock=?;`,
         DELETE_SALE: `DELETE FROM Sales WHERE id=?;`,
       },
       payments: {
