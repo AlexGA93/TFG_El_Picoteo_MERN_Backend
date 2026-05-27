@@ -72,6 +72,26 @@ docker compose -f docker-compose-dev.yml up --build
 docker compose up --build
 ```
 
+### Producción (usando `.env.production`)
+
+Iniciar en segundo plano:
+
+```bash
+docker compose --env-file .env.production up --build -d
+```
+
+Parar contenedores:
+
+```bash
+docker compose --env-file .env.production down
+```
+
+Ver logs:
+
+```bash
+docker compose --env-file .env.production logs -f
+```
+
 ### Parar contenedores
 
 ```bash
@@ -189,6 +209,23 @@ Entrar a MySQL:
 
 ```bash
 docker compose -f docker-compose-dev.yml exec mysqldb mysql -uroot -p
+```
+
+### Producción: acceso a MySQL
+
+En producción, el contenedor `server` (Node.js) no incluye el cliente `mysql`.
+Si ejecutas `mysql` dentro de `server`, verás `mysql: command not found`.
+
+Conéctate al servicio `mysqldb`:
+
+```bash
+docker compose --env-file .env.production exec mysqldb mysql -uroot -p
+```
+
+Acceso directo con contraseña (solo para entorno local):
+
+```bash
+docker compose --env-file .env.production exec mysqldb mysql -uroot -p123456
 ```
 
 ## 9. Actualizaciones de BBDD en contenedores Docker

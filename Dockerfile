@@ -1,20 +1,29 @@
-# Define image and version
-# FROM node:20
+FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim AS builder
 
-# Use the latest Node.js 22 image from the mirror registry
-FROM mirror.gcr.io/library/node:22-bookworm-slim
-
-RUN mkdir -p /home/app
-
-# We're going to define our code inside a folder inside the docker container
 WORKDIR /home/app
-# We need to copy our package.json inside the current folder
 COPY package*.json ./
-# Run the command to install our package.json dependencies
 RUN npm ci
-# Copy all of the content inside the container's folder
-COPY . .
-# PORT
+COPY tsconfig.json ./
+COPY src ./src
+COPY public ./public
+RUN npm run build
+
+FROM mirror.gcr.io/library/node:22.14.0-bookworm-slim AS runner
+
+ENV NODE_ENV=production
+WORKDIR /home/app
+
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+COPY --from=builder /home/app/dist ./dist
+COPY --from=builder /home/app/public ./public
+COPY --from=builder /home/app/src/core/db/Tables.sql ./dist/core/db/Tables.sql
+
 EXPOSE 5000
-# Initiate with the package.json command to run the server
-CMD [ "npx", "ts-node", "src/index.ts" ]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=5 \
+  CMD node -e "require('http').get('http://localhost:'+process.env.NODE_DOCKER_PORT+'/',(res)=>process.exit(res.statusCode===200?0:1)).on('error',()=>process.exit(1));"
+
+USER node
+CMD ["npm", "run", "start"]

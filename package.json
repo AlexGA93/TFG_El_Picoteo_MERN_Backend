@@ -2,10 +2,12 @@
     "name": "backend",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "dist/index.js",
     "scripts": {
         "dev": "nodemon -L src/index.ts",
-        "test": "set NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules && npx jest --runInBand  --detectOpenHandles"
+        "test": "set NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules && npx jest --runInBand  --detectOpenHandles",
+        "build": "tsc",
+        "start": "node dist/index.js"
     },
     "keywords": [],
     "author": "",
