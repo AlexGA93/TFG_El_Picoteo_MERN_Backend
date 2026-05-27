@@ -1,5 +1,7 @@
 import mysqlPool from "../../core/db/db";
 import { PoolConnection } from "mysql2/promise";
+import { unlink } from "fs/promises";
+import path from "path";
 import { RecipeRow, RecipesData, RecipeToBeCreated } from "../../core/types/recipes";
 import {
   createIngredientRow,
@@ -215,6 +217,34 @@ export const updateRecipeData = async (id: string, data: RecipeToBeCreated) => {
     await syncRecipeIngredients(connection, Number(id), data.ingredients);
 
     await connection.commit();
+
+    const previousImageFileName = currentRecipe.url?.split("/").pop();
+    const nextImageFileName = data.url?.split("/").pop();
+    const shouldDeletePreviousImage =
+      !!previousImageFileName &&
+      !!nextImageFileName &&
+      previousImageFileName !== nextImageFileName;
+
+    if (shouldDeletePreviousImage) {
+      const filePath = path.join(
+        process.cwd(),
+        "public",
+        "images",
+        previousImageFileName,
+      );
+
+      try {
+        await unlink(filePath);
+      } catch (error: any) {
+        if (error?.code !== "ENOENT") {
+          console.error(
+            `No se pudo eliminar la imagen local ${previousImageFileName}:`,
+            error,
+          );
+        }
+      }
+    }
+
     return getRecipeDataById(id);
   } catch (error) {
     await connection.rollback();
@@ -253,6 +283,20 @@ export const deleteRecipeData = async (id: string) => {
     await deleteStockRow(connection, Number(id));
 
     await connection.commit();
+
+    const imageFileName = currentRecipe.url?.split("/").pop();
+    if (imageFileName) {
+      const filePath = path.join(process.cwd(), "public", "images", imageFileName);
+
+      try {
+        await unlink(filePath);
+      } catch (error: any) {
+        if (error?.code !== "ENOENT") {
+          console.error(`No se pudo eliminar la imagen local ${imageFileName}:`, error);
+        }
+      }
+    }
+
     return true;
   } catch (error) {
     await connection.rollback();

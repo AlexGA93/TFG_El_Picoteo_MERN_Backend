@@ -77,6 +77,7 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
     url,
     ingredients,
   } = req.body;
+  const imageFileName = req.file?.filename ?? url;
   // log("req.body:", req.body);
 
   const ingredientsParsed = JSON.parse(ingredients);
@@ -97,7 +98,7 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
     !precio ||
     !tiempo_produccion_min ||
     !dificultad ||
-    !url ||
+    !imageFileName ||
     !Array.isArray(ingredientsParsed) ||
     ingredients.length === 0
   ) {
@@ -131,7 +132,7 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
     precio,
     tiempo_produccion_min,
     dificultad,
-    url,
+    url: imageFileName,
     ingredients: ingredientsParsed,
   });
 
@@ -165,6 +166,7 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     url,
     ingredients,
   } = req.body;
+  const imageFileName = req.file?.filename ?? url;
   // console.log({id});
   console.log(req.body);
   
@@ -177,7 +179,7 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     !precio ||
     !tiempo_produccion_min ||
     !dificultad ||
-    !url ||
+    !imageFileName ||
     !Array.isArray(ingredientsParsed) ||
     ingredients.length === 0
   ) {
@@ -212,7 +214,7 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     precio,
     tiempo_produccion_min,
     dificultad,
-    url,
+    url: imageFileName,
     ingredients: ingredientsParsed,
   });
 

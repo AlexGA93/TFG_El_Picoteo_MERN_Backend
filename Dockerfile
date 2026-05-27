@@ -20,6 +20,10 @@ COPY --from=builder /home/app/dist ./dist
 COPY --from=builder /home/app/public ./public
 COPY --from=builder /home/app/src/core/db/Tables.sql ./dist/core/db/Tables.sql
 
+# Allow runtime uploads when running as non-root user.
+RUN mkdir -p /home/app/public/images \
+  && chown -R node:node /home/app/public
+
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=5 \

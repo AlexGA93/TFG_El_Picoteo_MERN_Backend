@@ -10,6 +10,8 @@ services:
     depends_on:
       mysqldb:
         condition: service_healthy
+    volumes:
+      - server-images:/home/app/public/images
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:'+process.env.NODE_DOCKER_PORT+'/', (res) => process.exit(res.statusCode===200 ? 0 : 1)).on('error', () => process.exit(1));"]
@@ -47,3 +49,4 @@ networks:
 
 volumes:
   mysql-data:
+  server-images:

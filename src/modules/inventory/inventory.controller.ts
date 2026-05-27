@@ -55,7 +55,7 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
 export const update = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { nombre, tipo, unidades, n_unidades, proveedor, precio_unidad } = req.body;
-  await updateinventoryService({
+  const result = await updateinventoryService({
     id: parseInt(id),
     nombre,
     tipo,
@@ -64,6 +64,11 @@ export const update = asyncHandler(async (req: Request, res: Response) => {
     proveedor,
     precio_unidad,
   });
+
+  if (result.affectedRows === 0) {
+    throw new HttpError(constants.HTTP_STATUS.NOT_FOUND, "Producto no encontrado");
+  }
+
   return sendSuccess(res, constants.HTTP_STATUS.OK, null, "Producto actualizado exitosamente");
 });
 

@@ -1,12 +1,17 @@
 import { Router } from "express";
 import * as stockController from "./recipes.controller";
 import multer, { StorageEngine } from "multer";
+import path from "path";
 
 const router = Router();
 const storage: StorageEngine = multer.diskStorage({
   destination: "public/images",
   filename: (_req, file, cb) => {
-    const uniqueName = `${file.originalname}`;
+    const extension = path.extname(file.originalname);
+    const baseName = path
+      .basename(file.originalname, extension)
+      .replace(/[^a-zA-Z0-9_-]/g, "-");
+    const uniqueName = `${Date.now()}-${baseName}${extension}`;
     cb(null, uniqueName);
   },
 });

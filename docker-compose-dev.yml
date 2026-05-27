@@ -14,6 +14,7 @@ services:
     volumes:
       - .:/home/app
       - server-node-modules:/home/app/node_modules
+    command: sh -c "mkdir -p public/images && chmod -R 777 public/images && npm run dev"
 
   # MySQL container named as 'mysqldb'
   mysqldb:

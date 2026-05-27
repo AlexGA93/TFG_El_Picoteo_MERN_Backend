@@ -45,16 +45,6 @@ export const createinventory = (payload: Inventory) => {
 };
 
 export const updateinventory = (payload: Inventory) => {
-  console.log([
-  payload.nombre,
-  payload.tipo,
-  payload.unidades,
-  payload.n_unidades,
-  payload.proveedor,
-  payload.precio_unidad,
-  payload.id
-]);
-  
   return queryAsync<ResultSetHeader>(
     constants.SQL_QUERIES.DATABASE.UPDATE_INVENTORY_PRODUCT,
     [
